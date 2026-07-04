@@ -56,6 +56,7 @@ class LLMPublishGateTests(unittest.TestCase):
             '{"id": 2, "primary_country": "IRRELEVANT", "category": "neutral", "subject": "Sports coverage"}]',
             '[{"id": 1, "final_country": "Syria"}, {"id": 2, "final_country": "IRRELEVANT"}]',
             None,
+            None,
         ])
         analyzer._call_openrouter = lambda prompt, max_retries=2: next(responses)
         analyzer._build_attribution_prompt = analyzer_module.BNTIAnalyzer._build_attribution_prompt.__get__(analyzer, analyzer_module.BNTIAnalyzer)
@@ -72,6 +73,51 @@ class LLMPublishGateTests(unittest.TestCase):
         })
 
         self.assertFalse(candidate["publishable"])
+
+    def test_build_candidate_snapshot_falls_back_when_openrouter_rate_limited(self):
+        analyzer = self.make_analyzer()
+        analyzer.MIN_PUBLISHABLE_TOTAL_SIGNALS = 1
+        analyzer.MIN_PUBLISHABLE_ACTIVE_COUNTRIES = 1
+        analyzer.MIN_SIGNAL_COVERAGE_RATIO = 0.0
+        analyzer.MIN_ACTIVE_COUNTRY_COVERAGE_RATIO = 0.0
+        analyzer._utc_now = lambda: datetime(2026, 3, 28, 8, 0, 0)
+        analyzer.load_history = lambda: []
+        analyzer._load_existing_summary = lambda: {
+            "slot_start": "2026-03-28T00:00:00",
+            "slot_end": "2026-03-28T06:00:00",
+            "generated_at": "2026-03-28T06:00:00",
+            "next_refresh_at": "2026-03-28T12:00:00",
+            "headline": "Existing brief.",
+            "bullets": ["One.", "Two.", "Three."],
+            "watch": None,
+        }
+        analyzer._call_openrouter = lambda prompt, max_retries=2: None
+        analyzer._build_attribution_prompt = analyzer_module.BNTIAnalyzer._build_attribution_prompt.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+        analyzer._parse_attribution_response = analyzer_module.BNTIAnalyzer._parse_attribution_response.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+        analyzer._build_country_audit_prompt = analyzer_module.BNTIAnalyzer._build_country_audit_prompt.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+        analyzer._parse_country_audit_response = analyzer_module.BNTIAnalyzer._parse_country_audit_response.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+
+        candidate = analyzer.build_candidate_snapshot({
+            "Iraq": [
+                {
+                    "title": "Baghdad airport security alert",
+                    "translated_title": "Baghdad airport security alert",
+                    "link": "https://example.com/a",
+                    "date": "2026-03-28T07:15:00",
+                    "source_country": "Iraq",
+                }
+            ]
+        })
+
+        self.assertTrue(candidate["publishable"])
+        event = candidate["country_results"]["Iraq"]["events"][0]
+        self.assertEqual(event["category"], "border_security")
+        self.assertEqual(event["llm_primary_country"], "Iraq")
+        self.assertEqual(event["llm_final_country"], "Iraq")
+        self.assertEqual(event["confidence"], 0.35)
+        self.assertFalse(event["ai_category"])
+        self.assertEqual(event["ai_model"], "deterministic-fallback")
+        self.assertEqual(event["fallback_reason"], "llm_attribution_failed")
 
     def test_build_country_results_scores_from_llm_category_only(self):
         analyzer = self.make_analyzer()

@@ -1644,6 +1644,38 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
                 all_events.append(event_copy)
         return all_events
 
+    def _build_fallback_attribution_map(self, all_events, start_index=0, reason="llm_attribution_failed"):
+        attribution_map = {}
+        for offset, event in enumerate(all_events):
+            idx = start_index + offset
+            source_country = event.get("source_country")
+            if source_country not in self.border_countries:
+                source_country = "IRRELEVANT"
+
+            attribution_map[idx] = {
+                "primary_country": source_country,
+                "final_country": source_country,
+                "category": "border_security" if source_country != "IRRELEVANT" else "neutral",
+                "subject": event.get("translated_title") or event.get("title"),
+                "confidence": 0.35,
+                "ai_category": False,
+                "ai_model": "deterministic-fallback",
+                "fallback_reason": reason,
+            }
+        return attribution_map
+
+    def _build_fallback_country_audit_map(self, all_events, attribution_map, start_index=0, reason="country_audit_failed"):
+        audit_map = {}
+        for offset, event in enumerate(all_events):
+            idx = start_index + offset
+            result = attribution_map.get(idx, {})
+            final_country = result.get("primary_country") or event.get("source_country") or "IRRELEVANT"
+            audit_map[idx] = {
+                "final_country": final_country,
+                "fallback_reason": reason,
+            }
+        return audit_map
+
     def _build_country_results(self, all_events, attribution_map):
         country_events = {country: [] for country in self.border_countries}
         seen_targets = {country: set() for country in self.border_countries}
@@ -1667,14 +1699,16 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
             event_copy = dict(event)
             event_copy["category"] = category
             event_copy["weight"] = weight
-            event_copy["confidence"] = 1.0
-            event_copy["ai_model"] = self.openrouter_model
-            event_copy["ai_category"] = True
+            event_copy["confidence"] = result.get("confidence", 1.0)
+            event_copy["ai_model"] = result.get("ai_model", self.openrouter_model)
+            event_copy["ai_category"] = result.get("ai_category", True)
             event_copy["ai_reattributed"] = (final_country != source_country)
             event_copy["llm_primary_country"] = result.get("primary_country")
             event_copy["llm_final_country"] = final_country
             event_copy["llm_subject"] = result.get("subject")
             event_copy["llm_country_audit_corrected"] = (final_country != result.get("primary_country"))
+            if result.get("fallback_reason"):
+                event_copy["fallback_reason"] = result.get("fallback_reason")
             country_events[final_country].append(event_copy)
 
         country_results = {}
@@ -1785,17 +1819,32 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
             batch_events = all_events[start:start + batch_size]
             batch_map = self._resolve_attribution_batch(batch_events, start_index=start)
             if len(batch_map) != len(batch_events):
-                logger.warning(f"LLM attribution failed for batch starting at {start + 1}")
-                return {"publishable": False, "reason": "llm_call_failed", "failed_batch_start": start}
+                logger.warning(
+                    f"LLM attribution failed for batch starting at {start + 1}; using deterministic fallback"
+                )
+                batch_map = self._build_fallback_attribution_map(
+                    batch_events,
+                    start_index=start,
+                    reason="llm_attribution_failed",
+                )
 
             audit_map = self._resolve_country_audit_batch(batch_events, batch_map, start_index=start)
             if len(audit_map) != len(batch_events):
-                logger.warning(f"LLM country audit failed for batch starting at {start + 1}")
-                return {"publishable": False, "reason": "country_audit_failed", "failed_batch_start": start}
+                logger.warning(
+                    f"LLM country audit failed for batch starting at {start + 1}; using source-country fallback"
+                )
+                audit_map = self._build_fallback_country_audit_map(
+                    batch_events,
+                    batch_map,
+                    start_index=start,
+                    reason="country_audit_failed",
+                )
 
             for idx, result in batch_map.items():
                 merged = dict(result)
                 merged["final_country"] = audit_map[idx]["final_country"]
+                if audit_map[idx].get("fallback_reason") and not merged.get("fallback_reason"):
+                    merged["fallback_reason"] = audit_map[idx]["fallback_reason"]
                 attribution_map[idx] = merged
 
         if len(attribution_map) != len(all_events):
