@@ -119,6 +119,48 @@ class LLMPublishGateTests(unittest.TestCase):
         self.assertEqual(event["ai_model"], "deterministic-fallback")
         self.assertEqual(event["fallback_reason"], "llm_attribution_failed")
 
+    def test_build_candidate_snapshot_skips_llm_after_rate_limit_circuit_breaker(self):
+        analyzer = self.make_analyzer()
+        analyzer.MIN_PUBLISHABLE_TOTAL_SIGNALS = 1
+        analyzer.MIN_PUBLISHABLE_ACTIVE_COUNTRIES = 1
+        analyzer.MIN_SIGNAL_COVERAGE_RATIO = 0.0
+        analyzer.MIN_ACTIVE_COUNTRY_COVERAGE_RATIO = 0.0
+        analyzer._utc_now = lambda: datetime(2026, 3, 28, 8, 0, 0)
+        analyzer.load_history = lambda: []
+        analyzer._load_existing_summary = lambda: {
+            "slot_start": "2026-03-28T00:00:00",
+            "slot_end": "2026-03-28T06:00:00",
+            "generated_at": "2026-03-28T06:00:00",
+            "next_refresh_at": "2026-03-28T12:00:00",
+            "headline": "Existing brief.",
+            "bullets": ["One.", "Two.", "Three."],
+            "watch": None,
+        }
+        analyzer.openrouter_batch_size = 1
+        analyzer.openrouter_disabled_for_run = False
+        call_count = {"value": 0}
+
+        def fake_call(prompt, max_retries=2):
+            call_count["value"] += 1
+            analyzer.openrouter_disabled_for_run = True
+            return None
+
+        analyzer._call_openrouter = fake_call
+        analyzer._build_attribution_prompt = analyzer_module.BNTIAnalyzer._build_attribution_prompt.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+        analyzer._parse_attribution_response = analyzer_module.BNTIAnalyzer._parse_attribution_response.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+        analyzer._build_country_audit_prompt = analyzer_module.BNTIAnalyzer._build_country_audit_prompt.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+        analyzer._parse_country_audit_response = analyzer_module.BNTIAnalyzer._parse_country_audit_response.__get__(analyzer, analyzer_module.BNTIAnalyzer)
+
+        candidate = analyzer.build_candidate_snapshot({
+            "Iraq": [
+                {"title": "Iraq alert one", "translated_title": "Iraq alert one", "link": "https://example.com/1", "date": "2026-03-28T07:15:00", "source_country": "Iraq"},
+                {"title": "Iraq alert two", "translated_title": "Iraq alert two", "link": "https://example.com/2", "date": "2026-03-28T07:20:00", "source_country": "Iraq"},
+            ]
+        })
+
+        self.assertTrue(candidate["publishable"])
+        self.assertEqual(call_count["value"], 1)
+
     def test_build_country_results_scores_from_llm_category_only(self):
         analyzer = self.make_analyzer()
         all_events = [

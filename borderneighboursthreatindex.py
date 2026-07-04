@@ -89,6 +89,7 @@ class BNTIAnalyzer:
         self.openrouter_model = os.environ.get("OPENROUTER_MODEL", "openrouter/free")
         self.openrouter_base_url = "https://openrouter.ai/api/v1/chat/completions"
         self.openrouter_batch_size = max(int(os.environ.get("OPENROUTER_BATCH_SIZE", "10")), 1)
+        self.openrouter_disabled_for_run = False
         self.border_countries = list(self.BORDER_COUNTRIES)
         self.category_weights = dict(self.LLM_CATEGORY_WEIGHTS)
 
@@ -1227,6 +1228,9 @@ Events:
         """Call OpenRouter with automatic primary/backup key failover."""
         import requests
 
+        if getattr(self, "openrouter_disabled_for_run", False):
+            return None
+
         api_keys = []
         for key in [self.openrouter_api_key, getattr(self, "openrouter_backup_api_key", "")]:
             if key and key not in api_keys:
@@ -1234,6 +1238,7 @@ Events:
 
         if not api_keys:
             logger.warning("OpenRouter API keys not set — cannot build publishable candidate")
+            self.openrouter_disabled_for_run = True
             return None
 
         base_payload = {
@@ -1298,6 +1303,7 @@ Events:
                         time.sleep(3)
                         continue
                     break
+        self.openrouter_disabled_for_run = True
         return None
 
     def _normalize_headline_for_llm(self, value):
@@ -1498,6 +1504,9 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
         return attribution_map
 
     def _resolve_attribution_batch(self, all_events, start_index=0):
+        if getattr(self, "openrouter_disabled_for_run", False):
+            return {}
+
         prompt = self._build_attribution_prompt(all_events, start_index=start_index)
         response = self._call_openrouter(prompt)
         parsed = self._parse_attribution_response(response, all_events, start_index=start_index)
@@ -1593,6 +1602,9 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
         }
 
     def _resolve_country_audit_batch(self, all_events, attribution_map, start_index=0):
+        if getattr(self, "openrouter_disabled_for_run", False):
+            return {}
+
         prompt = self._build_country_audit_prompt(all_events, attribution_map, start_index=start_index)
         response = self._call_openrouter(prompt)
         parsed = self._parse_country_audit_response(response, all_events, start_index=start_index)
