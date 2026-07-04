@@ -852,6 +852,28 @@ class BNTIAnalyzer:
             "watch": None,
         }
 
+    def _build_fallback_regional_summary(self, summary_events, slot_start, slot_end, now_utc, next_refresh):
+        source_countries = sorted({event.get("country") for event in summary_events if event.get("country")})
+        country_count = len(source_countries)
+        country_word = "neighbor" if country_count == 1 else "neighbors"
+
+        return {
+            "slot_start": self._utc_iso(slot_start),
+            "slot_end": self._utc_iso(slot_end),
+            "generated_at": self._utc_iso(now_utc),
+            "next_refresh_at": self._utc_iso(next_refresh),
+            "window_hours": self.SUMMARY_WINDOW_HOURS,
+            "source_event_count": len(summary_events),
+            "source_countries": source_countries,
+            "headline": f"Border-country reporting stayed active across {country_count} {country_word}.",
+            "bullets": [
+                f"{len(summary_events)} scored signals passed the feed and coverage gates for the completed window.",
+                "Country placement uses source-country attribution while automated re-attribution is unavailable.",
+                "Review high-weight events directly before treating the regional picture as settled.",
+            ],
+            "watch": None,
+        }
+
     def _build_regional_summary_prompt(self, summary_events, slot_start, slot_end):
         lines = []
         for idx, event in enumerate(summary_events, start=1):
@@ -973,7 +995,8 @@ Events:
         response = self._call_openrouter(prompt)
         parsed = self._parse_regional_summary_response(response)
         if not parsed or not self._regional_summary_mentions_are_grounded(parsed, summary_events):
-            return None
+            logger.warning("Regional summary generation failed; using deterministic summary fallback")
+            return self._build_fallback_regional_summary(summary_events, slot_start, slot_end, now_utc, next_refresh)
 
         return {
             "slot_start": self._utc_iso(slot_start),

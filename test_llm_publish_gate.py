@@ -254,7 +254,7 @@ class LLMPublishGateTests(unittest.TestCase):
         self.assertFalse(candidate["publishable"])
         self.assertEqual(candidate["reason"], "insufficient_feed_coverage")
 
-    def test_build_candidate_snapshot_requires_summary_when_current_slot_missing(self):
+    def test_build_candidate_snapshot_uses_summary_fallback_when_current_slot_missing(self):
         analyzer = self.make_analyzer()
         analyzer.MIN_PUBLISHABLE_TOTAL_SIGNALS = 1
         analyzer.MIN_PUBLISHABLE_ACTIVE_COUNTRIES = 1
@@ -287,8 +287,9 @@ class LLMPublishGateTests(unittest.TestCase):
             ]
         })
 
-        self.assertFalse(candidate["publishable"])
-        self.assertEqual(candidate["reason"], "summary_generation_failed")
+        self.assertTrue(candidate["publishable"])
+        self.assertEqual(candidate["regional_summary_6h"]["source_event_count"], 1)
+        self.assertIn("source-country attribution", candidate["regional_summary_6h"]["bullets"][1])
 
     def test_build_candidate_snapshot_reuses_existing_summary_between_refreshes(self):
         analyzer = self.make_analyzer()
