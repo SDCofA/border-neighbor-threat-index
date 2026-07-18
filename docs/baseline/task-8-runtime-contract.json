@@ -1,0 +1,108 @@
+{
+  "captured_at": "2026-07-18T12:00:00+03:00",
+  "base_sha": "9fef5cb11e9f5a9e37c20392cdf0d35ca3a039a0",
+  "workflow_sha256": "95227d3c8c4decdf085abbe141a0eb7adc9716ba85a187ccab50500b9f62b981",
+  "interface_languages": [
+    "en"
+  ],
+  "event_language_markers": [
+    "en",
+    "local"
+  ],
+  "countries": [
+    "Armenia",
+    "Georgia",
+    "Greece",
+    "Iran",
+    "Iraq",
+    "Syria",
+    "Bulgaria"
+  ],
+  "runtime_ids": [
+    "chart-empty",
+    "close-modal",
+    "last-update",
+    "main-index",
+    "map-overlay-stats",
+    "map-svg",
+    "methodology-link",
+    "methodology-modal",
+    "next-update",
+    "regional-summary",
+    "signal-text",
+    "status-pill",
+    "status-text",
+    "stream-feed",
+    "trend-text",
+    "trendChart",
+    "utc-clock",
+    "weights-table"
+  ],
+  "runtime_objects": [
+    "BNTI",
+    "BNTIMap",
+    "BNTICharts",
+    "BNTIStream"
+  ],
+  "data_files": [
+    "bnti_data.js",
+    "bnti_data.json",
+    "bnti_history.csv"
+  ],
+  "workflow_outputs": [
+    "bnti_data.js",
+    "bnti_data.json",
+    "bnti_history.csv",
+    "GitHub Pages artifact"
+  ],
+  "snapshot_counts": {
+    "country_rows": 7,
+    "event_rows": 21,
+    "history_rows": 21,
+    "projection_rows": 6,
+    "map_polygon_paths": 98
+  },
+  "map_paths_by_country": {
+    "Armenia": 2,
+    "Bulgaria": 1,
+    "Georgia": 1,
+    "Greece": 74,
+    "Iran": 12,
+    "Iraq": 1,
+    "Syria": 1,
+    "Turkey": 6
+  },
+  "scoring_contract": {
+    "formula": "PerCountry = 1 + 9*(1 - exp(-avg(weight)/5 * 1.2)); Composite = weighted_avg(PerCountry)",
+    "fixture_inputs": [
+      0.0,
+      2.5,
+      5.0,
+      8.0
+    ],
+    "fixture_outputs": [
+      1.0,
+      5.06,
+      7.29,
+      8.68
+    ]
+  },
+  "freshness_contract": {
+    "workflow_interval": "2 hours",
+    "regional_brief_window": "6 hours",
+    "poll_interval_seconds": 60,
+    "fields": [
+      "meta.generated_at",
+      "meta.next_update"
+    ]
+  },
+  "screenshots": {
+    "pre_edit": "Unavailable: no browser surface was available at capture time; static selectors, dimensions, counts, and test baseline were recorded instead.",
+    "post_edit": [
+      "docs/baseline/task-8-375.png",
+      "docs/baseline/task-8-768.png",
+      "docs/baseline/task-8-1440.png"
+    ],
+    "verification": "Chromium reported scrollWidth equal to clientWidth, zero broken images, and zero page errors at 375px, 768px, and 1440px."
+  }
+}

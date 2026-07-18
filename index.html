@@ -11,8 +11,10 @@
   <title>BNTI | Monarch Castle Technologies</title>
   <meta name="description"
     content="Border Neighbor Threat Index — real-time geopolitical threat monitoring and analysis platform by Monarch Castle Technologies." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/layout.css" />
@@ -21,31 +23,46 @@
 </head>
 
 <body>
+  <a class="skip-link" href="#main-content">Skip to intelligence dashboard</a>
   <div class="app-shell">
+    <div class="utility-bar">
+      <div class="utility-inner">
+        <span>SDCofA &middot; Strategy, data &amp; intelligence</span>
+        <span>Open border-neighbor monitor</span>
+      </div>
+    </div>
     <header class="topbar">
-      <div class="brand">
-        <img src="logo.png" alt="MCT" class="brand-logo" />
-        <div>
-          <div class="brand-name">Monarch Castle</div>
-          <div class="brand-tag">Defense Intelligence</div>
+      <div class="topbar-inner">
+        <div class="brand">
+          <img src="logo.png" class="brand-logo" alt="Border Neighbor Threat Index logo" />
+          <div>
+            <div class="brand-name">Border Neighbor Threat Index</div>
+            <div class="brand-tag">Part of Monarch Castle Technologies</div>
+          </div>
         </div>
-      </div>
-      <div class="title-block">
-        <div class="product">Border Neighbor Threat Index</div>
-        <div class="subtitle">Automated regional signal extraction &amp; threat scoring &bull; updated every 2 hours
+        <div class="title-block">
+          <p class="eyebrow">Regional strategic intelligence</p>
+          <h1>Border Neighbor Threat Index</h1>
+          <div class="subtitle">Evidence-led signal extraction and threat scoring for T&uuml;rkiye&rsquo;s seven border neighbors.
+          </div>
         </div>
-      </div>
-      <div id="utc-clock" class="utc-clock">--:--:-- UTC</div>
-      <div class="status-block">
-        <div id="status-pill" class="status-pill">STABLE</div>
-        <div class="status-meta">
-          <div>LAST</div><span id="last-update">--</span>
-          <div>NEXT</div><span id="next-update">--</span>
+        <div class="status-block" aria-label="Current index status and data freshness">
+          <div id="status-pill" class="status-pill" aria-live="polite">STABLE</div>
+          <dl class="status-meta">
+            <div><dt>Updated</dt><dd id="last-update">--</dd></div>
+            <div><dt>Next</dt><dd id="next-update">--</dd></div>
+          </dl>
+          <div id="utc-clock" class="utc-clock">--:--:-- UTC</div>
         </div>
       </div>
     </header>
 
-    <main class="grid">
+    <main id="main-content" class="content-shell">
+      <div class="edition-strip">
+        <span>BNTI &middot; Current regional edition</span>
+        <span>Automated monitoring &middot; Refresh target every 2 hours</span>
+      </div>
+      <div class="grid">
       <section class="panel metric-panel">
         <div class="metric-card">
           <div class="metric-label">Composite Index</div>
@@ -57,11 +74,21 @@
           </div>
         </div>
         <div class="panel-block">
-          <div class="panel-title">48H Trend + Forecast</div>
+          <div class="panel-title">48H Trend + 6H Scenario</div>
           <div class="chart-wrap">
             <canvas id="trendChart"></canvas>
             <div id="chart-empty" class="chart-empty" style="display: none;">NO DATA</div>
           </div>
+          <dl id="scenario-disclosure" class="scenario-disclosure">
+            <div><dt>Classification</dt><dd>Scenario projection — not a forecast</dd></div>
+            <div><dt>Issued</dt><dd id="scenario-issued">--</dd></div>
+            <div><dt>Horizon</dt><dd id="scenario-horizon">6 hours</dd></div>
+            <div><dt>Method</dt><dd id="scenario-method">Linear trend extension &middot; BNTI v2.0.0</dd></div>
+            <div><dt>Uncertainty</dt><dd id="scenario-uncertainty">Confidence decays by horizon; no calibrated interval</dd></div>
+            <div><dt>Assumptions</dt><dd id="scenario-assumptions">Recent index trend continues; no structural break</dd></div>
+            <div><dt>Provenance</dt><dd id="scenario-provenance"><a href="bnti_data.json">bnti_data.json</a></dd></div>
+            <div><dt>Revisions / outcomes</dt><dd id="scenario-revisions">No revision or outcome ledger; treat as an assessment or scenario.</dd></div>
+          </dl>
         </div>
         <div class="panel-block">
           <div class="panel-title">Weighting Model</div>
@@ -76,9 +103,14 @@
       </section>
 
       <section class="panel map-panel">
-        <div class="panel-title">Regional Threat Map</div>
+        <div class="panel-heading">
+          <div class="panel-title">Regional Threat Map</div>
+          <label class="country-search-label" for="country-search">Find country
+            <input id="country-search" type="search" autocomplete="off" placeholder="Country name" />
+          </label>
+        </div>
         <div class="map-wrap">
-          <svg id="map-svg" viewBox="0 0 800 500" role="img" aria-label="Regional threat map">
+          <svg id="map-svg" viewBox="0 0 800 500" role="img" tabindex="0" aria-label="Regional threat map">
             <polygon class="country-shape" data-country="Syria"
               points="302.3,315.6 302.7,314.8 303.6,313.6 303.7,313.0 303.6,312.7 303.8,312.0 304.1,311.4 304.2,311.4 304.5,310.8 304.1,310.1 304.0,309.8 303.8,307.5 303.8,307.2 303.2,306.9 303.2,306.5 303.4,306.2 303.5,305.7 303.5,305.0 303.1,304.7 303.0,303.6 302.6,303.2 302.4,303.0 303.0,302.1 302.4,301.6 302.7,301.4 302.9,301.2 303.1,301.0 303.2,300.6 303.2,300.5 303.3,300.1 303.4,300.0 303.3,299.8 303.7,299.6 304.2,299.3 304.5,299.0 305.0,298.5 305.3,297.8 305.1,297.3 305.2,297.0 305.6,296.8 306.0,296.8 306.4,296.6 306.7,296.4 307.0,296.0 307.0,295.6 306.9,295.3 306.6,295.0 306.3,294.9 306.0,294.8 305.6,294.5 305.3,294.4 305.0,294.3 305.1,293.8 305.2,293.7 305.4,293.6 305.5,293.5 305.5,293.3 305.5,292.8 305.5,292.6 305.6,292.4 305.9,292.1 306.0,291.8 306.3,291.4 306.8,290.9 307.1,290.3 307.2,290.1 307.5,290.0 307.8,289.9 308.1,289.7 308.7,289.3 308.8,289.3 309.1,289.7 309.2,289.8 309.6,289.8 309.8,289.6 310.1,289.3 310.3,289.2 310.6,289.3 311.5,289.8 312.1,290.0 312.5,289.9 312.7,289.6 312.6,289.1 312.3,288.9 311.7,288.8 311.2,288.3 311.1,288.2 311.0,287.9 310.9,287.8 311.3,287.0 311.5,286.6 311.8,286.2 312.5,285.5 313.0,284.6 313.4,284.4 313.6,284.5 314.0,284.6 314.2,284.6 314.5,284.4 314.6,284.2 314.6,283.9 314.7,283.6 315.0,283.1 315.8,282.4 316.2,281.6 316.7,281.0 316.7,280.9 316.6,280.7 316.2,280.2 316.0,279.9 316.0,279.5 316.1,279.1 316.3,278.9 316.3,278.6 316.2,278.4 316.1,278.4 316.0,278.4 315.8,278.3 315.7,278.1 315.3,277.5 315.2,277.3 315.2,277.1 315.2,276.9 315.2,276.8 315.3,276.7 315.3,276.5 315.4,276.1 315.4,275.9 315.3,275.6 315.1,275.4 314.9,275.5 314.8,275.4 314.6,275.0 314.3,274.9 314.0,274.7 313.9,274.3 313.8,273.9 313.8,273.9 313.5,273.8 313.1,273.8 312.6,273.8 312.2,273.9 312.2,274.0 312.1,274.0 312.1,274.0 312.0,273.9 312.0,273.8 311.8,273.5 312.1,273.1 312.6,272.8 312.9,272.5 313.0,272.2 313.0,271.8 313.0,271.5 313.3,271.3 313.5,271.4 313.7,271.6 313.8,271.5 313.9,270.7 313.5,270.9 313.0,270.9 312.6,270.7 312.3,270.4 311.9,269.5 311.6,269.3 311.3,269.6 311.2,269.8 311.2,270.3 311.2,270.5 311.0,270.7 310.8,270.8 309.8,270.8 309.7,270.8 309.5,270.6 309.4,270.6 309.3,270.6 309.1,270.8 309.0,270.8 308.3,270.7 307.9,270.7 307.4,270.8 307.0,270.8 306.7,270.6 306.4,270.3 306.2,270.3 306.1,270.2 305.9,270.2 305.8,269.8 305.5,269.1 305.4,268.4 305.2,268.1 305.2,267.9 305.2,266.9 305.1,266.7 304.8,266.1 304.8,265.9 304.7,265.4 304.1,263.7 304.2,263.6 304.2,263.5 304.3,263.4 304.4,263.2 304.3,263.1 304.2,262.9 304.2,262.7 304.3,262.6 304.3,262.6 304.3,262.6 304.2,262.4 304.4,262.1 304.5,261.9 304.6,261.7 304.7,261.4 304.6,261.0 304.5,260.7 304.5,260.4 304.5,259.3 304.6,259.0 305.4,257.6 305.7,257.2 305.6,256.6 304.9,255.0 305.2,254.3 305.1,253.8 305.0,252.3 305.0,252.0 304.8,251.8 304.0,250.5 303.7,250.3 303.5,250.2 303.4,249.9 303.3,249.8 303.0,249.8 302.8,249.9 302.7,250.0 302.5,249.9 302.5,249.6 302.6,249.3 302.6,249.0 302.5,248.9 301.9,248.5 301.9,248.4 302.0,248.2 302.0,248.0 301.9,248.0 301.7,248.2 301.7,248.0 302.0,247.9 302.4,247.7 302.6,247.3 302.7,246.9 302.7,246.6 302.5,246.3 302.5,246.0 302.6,245.8 303.0,245.7 303.6,244.2 303.7,244.1 303.7,243.6 303.6,243.1 303.4,242.5 303.2,242.0 303.0,241.7 303.8,241.7 304.2,241.6 304.4,241.3 304.4,240.8 304.9,240.1 305.0,240.1 305.4,240.0 305.7,239.9 306.0,239.8 306.3,240.1 306.3,240.4 306.2,240.7 306.3,241.0 306.4,241.2 306.7,241.3 307.2,241.3 307.7,241.6 308.7,242.4 309.0,242.3 309.1,242.3 309.3,241.6 309.4,239.9 309.7,239.2 310.3,239.0 310.7,239.2 311.0,239.1 311.1,238.2 311.1,238.2 311.4,238.1 312.1,238.4 312.5,238.2 312.4,237.6 312.5,234.1 312.5,233.8 312.6,233.6 312.8,233.4 312.8,233.2 312.5,232.9 312.7,232.7 312.9,233.0 313.2,233.1 313.4,233.2 313.9,233.3 314.0,233.3 314.1,233.3 314.2,233.3 314.3,233.1 314.3,233.0 314.4,232.8 314.6,232.7 314.9,232.7 316.2,232.9 316.5,232.9 317.7,232.6 317.8,232.4 317.8,231.9 317.7,231.6 317.6,231.2 317.4,230.8 317.4,230.8 317.2,230.6 316.9,230.4 316.4,230.4 316.2,230.2 316.3,230.2 316.4,229.9 316.5,229.6 316.5,229.4 316.5,229.2 316.4,229.0 316.4,228.9 316.3,228.8 316.0,228.7 315.9,228.6 315.8,228.4 315.5,227.1 315.4,226.7 315.5,226.3 316.0,225.4 316.1,224.4 316.1,223.3 316.3,222.3 316.5,221.8 316.6,221.3 316.6,220.8 316.7,220.3 316.9,219.8 317.1,219.4 317.3,219.0 317.3,218.4 317.4,218.4 317.6,218.4 317.6,218.4 320.7,219.6 321.8,219.7 322.1,219.8 322.5,219.9 322.8,220.1 323.1,220.4 323.6,221.0 323.7,221.3 323.7,221.8 323.6,222.5 323.7,222.8 324.0,223.1 324.3,223.3 324.5,223.3 324.6,223.1 324.9,222.8 325.2,222.6 325.5,222.6 325.7,222.7 326.1,222.8 327.1,222.4 327.5,222.4 330.3,223.0 331.0,223.0 333.5,221.2 334.5,220.7 337.4,220.0 340.1,218.6 340.6,218.4 340.9,218.2 342.5,217.0 343.7,216.5 344.2,216.5 345.4,216.6 348.6,217.7 349.4,218.2 351.2,220.4 351.7,221.0 352.8,221.6 354.0,221.7 356.7,221.6 357.1,221.5 358.0,221.4 360.6,222.4 361.5,222.4 365.0,221.6 370.5,220.4 374.1,218.9 375.8,217.7 376.4,217.5 377.1,217.4 377.7,217.0 378.9,216.1 381.2,214.4 381.5,214.2 381.9,214.0 382.2,213.9 382.6,213.9 383.4,213.7 385.7,212.3 386.5,211.9 389.7,211.4 393.8,212.3 394.5,212.6 394.9,212.7 399.7,212.5 406.7,210.6 408.7,210.1 409.4,209.6 410.7,208.3 411.5,207.0 411.8,206.8 412.1,206.5 412.3,206.8 412.3,207.1 412.3,207.3 412.3,207.4 412.5,207.5 413.1,207.7 413.2,207.7 413.3,207.6 413.4,207.5 413.5,207.5 413.6,207.6 413.6,207.9 413.7,208.0 414.3,208.5 414.4,208.6 414.5,208.9 414.2,210.2 414.4,210.5 414.5,210.7 414.6,211.0 414.6,211.7 414.7,211.9 414.8,212.2 414.9,212.5 414.9,212.8 414.9,212.8 414.4,213.3 413.3,214.4 413.3,214.4 413.3,214.4 411.5,216.5 408.1,220.6 405.9,223.4 405.4,223.8 404.9,224.1 399.7,225.3 398.6,225.5 398.0,225.8 397.7,226.3 397.7,226.3 397.7,226.3 397.7,226.3 396.2,229.6 396.1,230.3 395.5,236.3 395.5,236.7 395.6,237.1 396.0,238.2 396.0,238.2 396.0,238.2 397.3,241.5 397.5,242.2 397.6,243.0 397.7,246.3 397.6,247.0 397.3,247.8 396.7,248.8 395.9,250.1 395.9,250.1 395.9,250.1 395.9,250.1 395.8,250.9 395.6,253.2 394.9,256.1 394.7,257.6 394.8,258.1 394.9,262.0 395.0,266.2 395.0,266.8 394.8,267.4 391.9,273.9 391.9,273.9 391.3,275.5 390.9,276.1 390.4,276.5 386.2,277.8 383.7,279.6 381.8,280.9 380.0,282.2 378.1,283.5 377.4,284.0 376.2,284.8 374.3,286.2 372.4,287.5 370.5,288.8 368.7,290.1 366.8,291.4 364.9,292.8 363.0,294.1 361.1,295.4 359.3,296.7 357.4,298.0 355.5,299.4 353.6,300.7 349.4,303.7 345.8,306.4 344.4,307.5 341.4,309.7 339.2,311.3 336.3,313.5 333.4,315.7 331.8,316.9 330.5,317.9 327.6,320.1 325.7,321.6 325.7,321.6 323.1,323.6 320.3,325.8 320.1,325.9 319.9,325.9 318.8,325.5 318.4,325.5 318.1,325.7 317.5,325.2 315.2,324.8 314.6,324.7 314.3,324.5 313.3,324.4 313.0,324.3 312.7,324.1 311.2,322.5 310.1,321.6 309.6,320.9 309.4,320.8 309.3,320.8 309.1,321.0 309.0,321.1 308.9,321.0 308.8,321.0 308.7,320.9 308.0,321.1 307.8,321.0 307.6,321.0 307.5,321.0 307.5,320.9 307.4,320.6 306.6,319.3 306.5,318.9 306.5,318.4 306.5,318.0 306.4,317.7 306.0,317.7 305.8,317.8 305.6,317.7 305.5,317.5 305.3,317.3 305.4,317.3 305.4,317.2 305.5,317.0 305.4,316.9 305.4,316.8 305.1,316.8 305.1,316.8 304.8,316.5 304.6,316.4 302.8,315.8 302.6,315.6 302.6,315.6 302.6,315.5 302.5,315.5 302.4,315.5 302.3,315.6" />
             <polygon class="country-shape" data-country="Georgia"
@@ -283,24 +315,28 @@
           <div><span class="legend-swatch elevated"></span>Elevated</div>
           <div><span class="legend-swatch critical"></span>Critical</div>
         </div>
+        <aside id="country-detail" class="country-detail" aria-live="polite">
+          Select a border neighbor on the map or search by country name to inspect its current analytical signal.
+        </aside>
       </section>
 
       <section class="panel feed-panel">
         <div class="panel-title">Intelligence Stream</div>
         <div id="stream-feed" class="stream-list"></div>
       </section>
+      </div>
     </main>
 
     <footer class="footer">
       <div>BNTI v2.0.0 &bull; &copy; Monarch Castle Technologies</div>
-      <div><a href="#" id="methodology-link">Methodology &rarr;</a></div>
+      <div><a href="#" id="methodology-link" role="button" aria-expanded="false">Methodology &rarr;</a></div>
     </footer>
 
     <!-- Methodology Modal -->
-    <div id="methodology-modal" class="modal-overlay">
-      <div class="modal-content">
-        <button id="close-modal" class="modal-close">&times;</button>
-        <h2>BNTI Methodology</h2>
+    <div id="methodology-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="methodology-title">
+      <div class="modal-content" tabindex="-1">
+        <button id="close-modal" class="modal-close" aria-label="Close methodology">&times;</button>
+        <h2 id="methodology-title">BNTI Methodology</h2>
 
         <section>
           <h3>1. Data Collection</h3>

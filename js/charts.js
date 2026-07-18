@@ -29,19 +29,21 @@ const BNTICharts = {
                 labels,
                 datasets: [
                     {
+                        label: 'Observed index',
                         data: historyValues,
-                        borderColor: '#FF6600',
+                        borderColor: '#c9a24b',
                         borderWidth: 1.5,
                         pointRadius: 0,
                         tension: 0.3,
                         fill: {
                             target: 'origin',
-                            above: 'rgba(255, 102, 0, 0.08)'
+                            above: 'rgba(201, 162, 75, 0.08)'
                         }
                     },
                     {
+                        label: 'Scenario projection',
                         data: forecastValues,
-                        borderColor: '#666666',
+                        borderColor: '#7d7565',
                         borderDash: [3, 4],
                         borderWidth: 1,
                         pointRadius: 0,
@@ -57,7 +59,7 @@ const BNTICharts = {
                     legend: { display: false },
                     tooltip: {
                         backgroundColor: '#1a1a1a',
-                        borderColor: '#FF6600',
+                        borderColor: '#c9a24b',
                         borderWidth: 1,
                         titleFont: { family: 'JetBrains Mono', size: 9 },
                         bodyFont: { family: 'JetBrains Mono', size: 10 },
@@ -72,10 +74,10 @@ const BNTICharts = {
                         min: 1,
                         max: 10,
                         ticks: {
-                            color: '#666666',
+                            color: '#7d7565',
                             font: { family: 'JetBrains Mono', size: 8 }
                         },
-                        grid: { color: 'rgba(255, 255, 255, 0.04)' }
+                            grid: { color: 'rgba(236, 230, 216, 0.05)' }
                     }
                 }
             }
