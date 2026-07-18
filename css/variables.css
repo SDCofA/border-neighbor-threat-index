@@ -4,42 +4,45 @@
 
 :root {
   /* Surfaces */
-  --bg:             #000000;
-  --bg-panel:       #0a0a0a;
-  --bg-panel-soft:  #111111;
-  --bg-card:        #080808;
+  --bg: #15130f;
+  --bg-panel: #191711;
+  --bg-panel-soft: #1f1c16;
+  --bg-card: #17140f;
 
   /* Borders */
-  --border:         #1a1a1a;
-  --border-strong:  #2a2a2a;
-  --border-accent:  #FF6600;
+  --border: #2c2820;
+  --border-soft: #221f18;
+  --border-strong: #463f31;
+  --border-accent: #c9a24b;
 
   /* Text */
-  --text-primary:   #e0e0e0;
-  --text-secondary: #999999;
-  --text-muted:     #666666;
-  --text-bright:    #ffffff;
+  --text-primary: #ece6d8;
+  --text-secondary: #9a9284;
+  --text-muted: #7d7565;
+  --text-faint: #6b6457;
+  --text-bright: #f5efe2;
 
   /* Bloomberg Accent Palette */
-  --accent:         #FF6600;     /* Bloomberg orange */
-  --accent-strong:  #FF8800;
-  --accent-dim:     rgba(255, 102, 0, 0.15);
-  --cyan:           #00D4FF;
-  --cyan-dim:       rgba(0, 212, 255, 0.15);
+  --accent: #c9a24b;
+  --accent-strong: #dfbd6b;
+  --accent-dim: rgba(201, 162, 75, 0.12);
+  --cyan: #a69b83;
+  --cyan-dim: rgba(166, 155, 131, 0.12);
 
   /* Status Colors */
-  --critical:       #FF3333;
-  --critical-dim:   rgba(255, 51, 51, 0.15);
-  --elevated:       #FFB020;
-  --elevated-dim:   rgba(255, 176, 32, 0.15);
-  --stable:         #00CC66;
-  --stable-dim:     rgba(0, 204, 102, 0.15);
+  --critical: #cf5b4e;
+  --critical-dim: rgba(207, 91, 78, 0.12);
+  --elevated: #d8a13f;
+  --elevated-dim: rgba(216, 161, 63, 0.12);
+  --stable: #6fae7e;
+  --stable-dim: rgba(111, 174, 126, 0.12);
 
   /* Effects */
-  --shadow:         0 2px 8px rgba(0, 0, 0, 0.6);
-  --radius:         2px;
+  --shadow: 0 18px 54px rgba(0, 0, 0, 0.24);
+  --radius: 1px;
 
   /* Typography */
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --sans: "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
+  --serif: "Spectral", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }

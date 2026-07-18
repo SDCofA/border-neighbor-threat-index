@@ -787,3 +787,321 @@
     font-size: 10px;
     font-family: var(--mono);
 }
+
+/* Task 8 editorial alignment: shared MENA / WTI presentation roles. */
+.brand {
+    min-width: 0;
+    gap: 14px;
+}
+
+.brand-logo {
+    display: block;
+    width: 104px;
+    max-width: 42%;
+    height: 54px;
+    object-position: left center;
+}
+
+.brand-name {
+    color: var(--text-primary);
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.1;
+    text-transform: none;
+}
+
+.brand-tag {
+    margin-top: 5px;
+    color: var(--text-muted);
+    font: 8.5px/1.35 var(--mono);
+    letter-spacing: .09em;
+}
+
+.eyebrow {
+    margin: 0;
+    color: var(--text-muted);
+    font: 500 10px var(--mono);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.title-block h1 {
+    margin: 4px 0 0;
+    color: var(--text-primary);
+    font: 600 clamp(26px, 3vw, 38px)/1.02 var(--serif);
+    letter-spacing: -.01em;
+}
+
+.title-block .subtitle {
+    max-width: 580px;
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font: 13px/1.45 var(--sans);
+}
+
+.status-block {
+    min-width: 0;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.status-pill {
+    min-height: 28px;
+    padding: 6px 10px;
+    font-weight: 500;
+}
+
+.live-dot {
+    animation: none;
+}
+
+.status-meta {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+    margin: 0;
+}
+
+.status-meta > div {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 8px;
+    align-items: baseline;
+}
+
+.status-meta dt,
+.status-meta dd {
+    margin: 0;
+    font: 9px/1.35 var(--mono);
+}
+
+.status-meta dt {
+    color: var(--text-faint);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.status-meta dd {
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+}
+
+.utc-clock {
+    color: var(--text-muted);
+}
+
+.panel {
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    background: var(--bg-panel);
+    box-shadow: var(--shadow);
+}
+
+.panel.map-panel,
+.panel.feed-panel {
+    border-top-color: var(--border);
+}
+
+.panel-title {
+    padding: 11px 14px 10px;
+    color: var(--text-muted);
+    background: var(--bg-panel-soft);
+    font-size: 9px;
+    letter-spacing: .14em;
+}
+
+.metric-card {
+    padding: 20px 16px;
+    background: var(--bg-card);
+}
+
+.metric-value {
+    margin-top: 10px;
+    font-size: clamp(48px, 5vw, 66px);
+    font-weight: 500;
+    letter-spacing: -.04em;
+    line-height: .88;
+}
+
+.panel-block {
+    padding: 14px;
+}
+
+.chart-wrap {
+    height: 120px;
+    margin-top: 10px;
+}
+
+.scenario-disclosure {
+    display: grid;
+    gap: 1px;
+    margin: 12px 0 0;
+    border: 1px solid var(--border);
+    background: var(--border);
+}
+
+.scenario-disclosure > div {
+    min-width: 0;
+    padding: 8px 9px;
+    background: var(--bg-card);
+}
+
+.scenario-disclosure dt,
+.scenario-disclosure dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.scenario-disclosure dt {
+    color: var(--text-faint);
+    font: 8px var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.scenario-disclosure dd {
+    margin-top: 3px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.scenario-disclosure a {
+    color: var(--accent);
+}
+
+.panel-heading {
+    display: flex;
+    min-width: 0;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-panel-soft);
+}
+
+.panel-heading .panel-title {
+    border-bottom: 0;
+}
+
+.country-search-label {
+    width: min(100%, 220px);
+    padding: 8px 12px;
+    color: var(--text-muted);
+    font: 8px var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.country-search-label input {
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    margin-top: 5px;
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    background: var(--bg);
+    font: 12px var(--sans);
+}
+
+.country-search-label input:focus {
+    border-color: var(--accent);
+}
+
+.country-detail {
+    min-height: 72px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.country-detail strong {
+    color: var(--text-primary);
+    font: 600 20px var(--serif);
+}
+
+.country-detail em {
+    color: var(--text-muted);
+    font: 9px var(--mono);
+    font-style: normal;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.country-shape:focus-visible {
+    outline: none;
+    stroke: var(--text-primary);
+    stroke-width: 2.5;
+    filter: brightness(1.14);
+}
+
+input:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.modal-content {
+    color: var(--text-primary);
+    background: var(--bg-panel);
+    border-top-color: var(--accent);
+}
+
+@media (max-width: 720px) {
+    .brand-logo {
+        width: 92px;
+        max-width: 36%;
+        height: 46px;
+    }
+
+    .status-block {
+        align-items: flex-start;
+    }
+
+    .panel-heading {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .country-search-label {
+        width: 100%;
+    }
+
+    .map-wrap,
+    #map-svg {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .scenario-disclosure {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (min-width: 1201px) {
+    .map-panel {
+        align-self: start;
+    }
+
+    .map-panel .map-wrap {
+        height: 600px;
+        flex: none;
+    }
+
+    .feed-panel {
+        max-height: 1120px;
+    }
+}

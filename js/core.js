@@ -6,6 +6,7 @@
 const BNTI = {
   data: window.BNTI_DATA || null,
   trendChart: null,
+  lastFocusedElement: null,
 
   // ── Helpers ──
   getIndexValue(obj) {
@@ -155,6 +156,33 @@ const BNTI = {
     `;
   },
 
+  updateScenarioDisclosure() {
+    const issued = document.getElementById('scenario-issued');
+    const horizon = document.getElementById('scenario-horizon');
+    const uncertainty = document.getElementById('scenario-uncertainty');
+    if (!issued || !horizon || !uncertainty) return;
+
+    const issueTime = this.data?.meta?.generated_at ? new Date(this.data.meta.generated_at) : null;
+    const points = this.parsePoints(this.data?.forecast);
+    issued.textContent = issueTime && !Number.isNaN(issueTime.getTime())
+      ? this.formatDateTime(issueTime)
+      : 'Not recorded';
+
+    if (issueTime && !Number.isNaN(issueTime.getTime()) && points.length) {
+      const hours = Math.max(0, Math.round((points[points.length - 1].ts - issueTime) / 3600000));
+      horizon.textContent = `${hours || 6} hours`;
+    } else {
+      horizon.textContent = '6 hours';
+    }
+
+    const confidences = points
+      .map(point => Number(point.confidence))
+      .filter(Number.isFinite);
+    uncertainty.textContent = confidences.length
+      ? `Heuristic confidence ${Math.round(Math.min(...confidences) * 100)}–${Math.round(Math.max(...confidences) * 100)}%; no calibrated interval`
+      : 'Heuristic confidence unavailable; no calibrated interval';
+  },
+
   // ── Render All ──
   renderAll() {
     if (!this.data) return;
@@ -164,6 +192,7 @@ const BNTI = {
     this.updateMetrics(historyPoints);
     this.updateWeights();
     this.updateRegionalBriefing();
+    this.updateScenarioDisclosure();
     BNTIMap.update(this.data);
     BNTIStream.update(this.data);
     BNTICharts.init(historyPoints, forecastPoints);
@@ -213,20 +242,30 @@ const BNTI = {
     const close = document.getElementById('close-modal');
     if (!link || !modal) return;
 
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      modal.style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    });
-    close?.addEventListener('click', () => {
+    const content = modal.querySelector('.modal-content');
+    const closeModal = () => {
       modal.style.display = 'none';
       document.body.style.overflow = '';
+      link.setAttribute('aria-expanded', 'false');
+      this.lastFocusedElement?.focus();
+    };
+
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      this.lastFocusedElement = document.activeElement;
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      link.setAttribute('aria-expanded', 'true');
+      content?.focus();
     });
+    close?.addEventListener('click', closeModal);
     modal.addEventListener('click', e => {
       if (e.target === modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+        closeModal();
       }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.style.display === 'block') closeModal();
     });
   }
 };
