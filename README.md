@@ -187,7 +187,9 @@ The preview is maintained as a repository asset; the live interface or generated
 
 ## Data and methodology
 
-See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the implementation files in this repository. Source dates, transformation steps, and known gaps must travel with analytical outputs.
+- [methodology.tex](methodology.tex)
+
+These repository-specific sources define the methodology or provenance boundary. Source dates, transformation steps, and known gaps must travel with analytical outputs.
 
 ## Update frequency
 
@@ -199,21 +201,12 @@ The publishing workflow targets a two-hour refresh; freshness and publish gates 
 python -m pytest -q
 ```
 
-```shell
-python -m pytest -q tests/test_repository_hygiene.py
-```
-
 Run only in a trusted development environment and review repository-specific prerequisites before using networked or hardware features.
 
 ## Architecture
 
-- `all_negative_titles.txt` — repository entry point or configuration.
-- `apple-touch-icon.png` — repository entry point or configuration.
-- `Armenia_news.txt` — repository entry point or configuration.
-- `assets/` — implementation or data module.
-- `bnti.png` — repository entry point or configuration.
-- `BNTIndex.pdf` — repository entry point or configuration.
-- `bnti_data.js` — repository entry point or configuration.
+- `borderneighboursthreatindex.py` — repository-specific implementation, data, or configuration boundary.
+- `bnti_data.json` — repository-specific implementation, data, or configuration boundary.
 
 ## Tests
 
