@@ -160,3 +160,89 @@ Licensed under the Apache License 2.0. See [`LICENSE`](LICENSE) for details. © 
 A standing index of the **Strategic Data Company of Ankara** — a constituent house of [Monarch Castle Holdings](https://github.com/MonarchCastleHoldings). Sister company: [Monarch Castle Technologies](https://github.com/monarchcastletech).
 
 <div align="center"><sub>STRATEGIC DATA COMPANY OF ANKARA · ANKARA · TÜRKİYE · MMXXVI</sub></div>
+
+---
+
+<!-- repository-hygiene:start -->
+
+![Strategic Data Company of Ankara approved lockup](docs/brand/organization-lockup.png)
+
+BNTI — multilingual, LLM-normalized geopolitical threat index for Türkiye's seven border neighbors. Auto-refreshed every 2 hours via GitHub Actions and published to GitHub Pages.
+
+![Lifecycle: Active](docs/lifecycle-active.svg)
+
+## Repository status
+
+Lifecycle: **Active**. The badge and this statement describe maintenance status, not service availability.
+
+## Public access
+
+[Open the published project](https://sdcofa.github.io/border-neighbor-threat-index/)
+
+## Screenshots
+
+![Border Neighbor Threat Index repository preview](docs/social-preview.png)
+
+The preview is maintained as a repository asset; the live interface or generated output remains authoritative.
+
+## Data and methodology
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the implementation files in this repository. Source dates, transformation steps, and known gaps must travel with analytical outputs.
+
+## Update frequency
+
+The publishing workflow targets a two-hour refresh; freshness and publish gates may defer a run.
+
+## Quick start
+
+```shell
+python -m pytest -q
+```
+
+```shell
+python -m pytest -q tests/test_repository_hygiene.py
+```
+
+Run only in a trusted development environment and review repository-specific prerequisites before using networked or hardware features.
+
+## Architecture
+
+- `all_negative_titles.txt` — repository entry point or configuration.
+- `apple-touch-icon.png` — repository entry point or configuration.
+- `Armenia_news.txt` — repository entry point or configuration.
+- `assets/` — implementation or data module.
+- `bnti.png` — repository entry point or configuration.
+- `BNTIndex.pdf` — repository entry point or configuration.
+- `bnti_data.js` — repository entry point or configuration.
+
+## Tests
+
+```shell
+python -m pytest -q tests/test_repository_hygiene.py
+```
+
+## Provenance
+
+Original software history is maintained in Git. External datasets, reports, trademarks, screenshots, and assets are not relicensed by this repository; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before reuse.
+
+## Forecast limitations
+
+Forecasts and model-derived scores are probabilistic, time-bound analytical outputs—not facts, guarantees, or advice. Evaluate them against their stated horizon, source timestamp, methodology, and subsequent outcomes. Missing or delayed inputs can defer publication.
+
+## Security
+
+Do not publish vulnerabilities in an issue. Use GitHub's private vulnerability-reporting flow when available, or follow the [organization security policy](https://github.com/SDCofA/.github/security/policy).
+
+## License
+
+Original repository code and documentation are available under **Apache-2.0**; see [LICENSE](LICENSE). That license does not override third-party terms documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Citation
+
+Use the machine-readable [CITATION.cff](CITATION.cff). Cite the specific commit and, for analytical use, record the data or model snapshot date.
+
+## Masterbrand endorsement
+
+Border Neighbor Threat Index is published by the Strategic Data Company of Ankara, an endorsed analytical unit. **Part of Monarch Castle Technologies.**
+
+<!-- repository-hygiene:end -->
