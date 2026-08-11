@@ -9,7 +9,7 @@
   ![Cadence](https://img.shields.io/badge/Cadence-2--hour%20refresh-b0894f)
   ![Coverage](https://img.shields.io/badge/Coverage-7%20border%20states-0b1f3a)
   ![Method](https://img.shields.io/badge/Method-Deterministic%20scoring-b0894f)
-  ![License](https://img.shields.io/badge/License-Apache%202.0-6e1f2b)
+  ![License](https://img.shields.io/badge/License-MIT-6e1f2b)
 
   **[Live assessment](https://sdcofa.github.io/border-neighbor-threat-index/)** · **[Methodology whitepaper](methodology.pdf)** · **[Reproduction guide](DEPLOYMENT_GUIDE.md)**
 </div>
@@ -153,7 +153,7 @@ The Index is held to the Company's standing doctrine:
 }
 ```
 
-Licensed under the Apache License 2.0. See [`LICENSE`](LICENSE) for details. © 2026 Monarch Castle Holdings · Ankara, Türkiye.
+Licensed under the MIT License. See [`LICENSE`](LICENSE) for details. © 2026 Monarch Castle Holdings · Ankara, Türkiye.
 
 ---
 
@@ -228,7 +228,7 @@ Do not publish vulnerabilities in an issue. Use GitHub's private vulnerability-r
 
 ## License
 
-Original repository code and documentation are available under **Apache-2.0**; see [LICENSE](LICENSE). That license does not override third-party terms documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Original repository code and documentation are available under **MIT**; see [LICENSE](LICENSE). That license does not override third-party terms documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Citation
 
