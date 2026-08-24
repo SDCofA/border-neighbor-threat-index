@@ -347,10 +347,6 @@ class BNTIAnalyzer:
         encoded = quote_plus(query)
         return f"https://news.google.com/rss/search?q={encoded}&hl=en-US&gl=US&ceid=US:en"
 
-    def _gdelt_url(self, query):
-        encoded = quote_plus(query)
-        return f"https://api.gdeltproject.org/api/v2/doc/doc?query={encoded}&mode=artlist&maxrecords=50&format=rss"
-
     def _add_mirror_sources(self):
         for country, queries in self.mirror_queries.items():
             if isinstance(queries, str):
@@ -358,7 +354,6 @@ class BNTIAnalyzer:
             mirrors = []
             for query in queries:
                 mirrors.append(self._google_news_url(query))
-                mirrors.append(self._gdelt_url(query))
             base = self.rss_urls.get(country, [])
             merged = list(dict.fromkeys(base + mirrors))
             self.rss_urls[country] = merged
