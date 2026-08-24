@@ -1,4 +1,4 @@
-﻿import feedparser
+import feedparser
 from datetime import datetime, timedelta
 from dateutil import parser as date_parser
 import os

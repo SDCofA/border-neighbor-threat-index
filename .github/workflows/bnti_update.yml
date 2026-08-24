@@ -73,8 +73,8 @@ jobs:
 
     - name: Commit Updated Data
       run: |
-        git config --global user.name 'BNTI Intelligence Bot'
-        git config --global user.email 'bot@monarchcastle.tech'
+        git config --global user.name 'akgularda'
+        git config --global user.email 'akgularda@users.noreply.github.com'
         
         # Add all data files (ignore errors if files don't exist)
         git add bnti_data.js bnti_history.csv bnti_data.json 2>/dev/null || true
