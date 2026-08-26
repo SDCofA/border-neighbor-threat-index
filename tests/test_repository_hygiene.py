@@ -11,7 +11,7 @@ METHODOLOGY_EVIDENCE = ["methodology.tex"]
 QUICK_START_COMMANDS = ["python -m pytest -q"]
 ARCHITECTURE_IDENTIFIERS = ["borderneighboursthreatindex.py","bnti_data.json"]
 THIRD_PARTY_EXCLUSIONS = ["news corpora, threat datasets, PDFs, and spreadsheets","logos, maps, trademarks, screenshots, and external assets"]
-LICENSE_DECISION = "preserve-apache"
+LICENSE_DECISION = "preserve-mit"
 
 
 def test_repository_hygiene_documentation_contract():

@@ -58,40 +58,37 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
-      continue-on-error: true
+
+    - name: Verify Product Contracts
+      run: python -m pytest -q
 
     - name: Run BNTI Analyzer
-      run: |
-        # Run analyzer but NEVER fail the workflow
-        python borderneighboursthreatindex.py || echo "Analyzer encountered issues but continuing..."
-        exit 0
+      run: python borderneighboursthreatindex.py
       env:
         OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         OPENROUTER_API_KEY_BACKUP: ${{ secrets.OPENROUTER_API_KEY_BACKUP }}
         OPENROUTER_MODEL: openrouter/free
-      continue-on-error: true
 
     - name: Commit Updated Data
       run: |
         git config --global user.name 'akgularda'
         git config --global user.email 'akgularda@users.noreply.github.com'
         
-        # Add all data files (ignore errors if files don't exist)
-        git add bnti_data.js bnti_history.csv bnti_data.json 2>/dev/null || true
+        git add bnti_data.js bnti_history.csv bnti_data.json
         
-        # Commit with timestamp (ignore if nothing to commit)
         TIMESTAMP=$(date +'%Y-%m-%d %H:%M UTC')
-        git diff --cached --quiet || git commit -m "INTEL UPDATE: ${TIMESTAMP}" || true
+        git diff --cached --quiet || git commit -m "INTEL UPDATE: ${TIMESTAMP}"
         
-        # Push changes with retry logic for concurrent runs
+        pushed=false
         for i in 1 2 3 4 5; do
-          git pull --rebase origin main 2>/dev/null || true
-          git push && break || sleep 10
+          git pull --rebase origin main
+          if git push; then
+            pushed=true
+            break
+          fi
+          sleep 10
         done
-        
-        # Always exit success
-        exit 0
-      continue-on-error: true
+        test "$pushed" = true
 
   deploy-pages:
     needs: update-intelligence

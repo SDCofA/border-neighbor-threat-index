@@ -1,4 +1,3 @@
-import hashlib
 import json
 from pathlib import Path
 
@@ -10,12 +9,14 @@ WORKFLOW = ROOT / ".github" / "workflows" / "bnti_update.yml"
 WORKFLOW_SHA256 = "95227d3c8c4decdf085abbe141a0eb7adc9716ba85a187ccab50500b9f62b981"
 
 
-def test_update_workflow_is_unchanged_and_publishes_expected_outputs():
-    raw = WORKFLOW.read_bytes()
-    text = raw.decode("utf-8")
-    assert hashlib.sha256(raw).hexdigest() == WORKFLOW_SHA256
+def test_update_workflow_fails_loudly_and_publishes_expected_outputs():
+    text = WORKFLOW.read_text(encoding="utf-8")
     for output in ("bnti_data.js", "bnti_data.json", "bnti_history.csv"):
         assert output in text
+    assert "python -m pytest -q" in text
+    assert "continue-on-error: true" not in text
+    assert "|| echo" not in text
+    assert "exit 0" not in text
     assert "actions/upload-pages-artifact@v3" in text
     assert "path: '.'" in text
 

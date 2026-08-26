@@ -1,5 +1,5 @@
 import feedparser
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil import parser as date_parser
 import os
 import pandas as pd
@@ -756,7 +756,7 @@ class BNTIAnalyzer:
         return []
 
     def _utc_now(self):
-        return datetime.utcnow().replace(microsecond=0)
+        return datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)
 
     def _utc_iso(self, dt_value):
         return dt_value.replace(microsecond=0).isoformat() + "Z"
@@ -1930,12 +1930,11 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
 if __name__ == "__main__":
     try:
         analyzer = BNTIAnalyzer()
+        # A rejected candidate is a safe data outcome, not an execution error.
+        # Fatal exceptions must still reach CI as failures.
         analyzer.run()
     except Exception as e:
-        # NEVER crash - log and exit gracefully
         logging.error(f"Analyzer encountered a critical error: {e}")
-        logging.info("Exiting gracefully to prevent workflow failure.")
-        # Exit 0 so GitHub Actions reports SUCCESS
         import sys
-        sys.exit(0)
+        sys.exit(1)
 
