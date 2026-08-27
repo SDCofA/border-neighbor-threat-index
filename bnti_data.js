@@ -2505,5 +2505,253 @@ window.BNTI_DATA = {
       ],
       "watch": null
     }
+  },
+  "early_warning": {
+    "issued_at": "2026-08-27T18:31:34.132063+00:00",
+    "horizon": "0-7 days",
+    "classification": "precursor-anomaly-watch-not-event-probability",
+    "score": 39.0,
+    "level": "WATCH",
+    "confidence": "HIGH",
+    "confidence_score": 100.0,
+    "components": [
+      {
+        "id": "narrative_pressure",
+        "label": "Narrative precursor pressure",
+        "score": 35.0,
+        "available": true,
+        "events_considered": 105,
+        "precursor_event_count": 0,
+        "precursor_share": 0.0,
+        "severe_event_share": 1.0,
+        "independent_sources": 19,
+        "countries_with_precursors": [],
+        "signals": [
+          {
+            "id": "force_posture",
+            "label": "Force Posture",
+            "event_count": 0,
+            "independent_sources": 0,
+            "cross_source_confirmed": false,
+            "evidence": []
+          },
+          {
+            "id": "protective_action",
+            "label": "Protective Action",
+            "event_count": 0,
+            "independent_sources": 0,
+            "cross_source_confirmed": false,
+            "evidence": []
+          },
+          {
+            "id": "coercive_pressure",
+            "label": "Coercive Pressure",
+            "event_count": 0,
+            "independent_sources": 0,
+            "cross_source_confirmed": false,
+            "evidence": []
+          },
+          {
+            "id": "systems_disruption",
+            "label": "Systems Disruption",
+            "event_count": 0,
+            "independent_sources": 0,
+            "cross_source_confirmed": false,
+            "evidence": []
+          }
+        ]
+      },
+      {
+        "id": "cross_market_dislocation",
+        "label": "Cross-market dislocation",
+        "score": 0.0,
+        "available": true,
+        "series_available": 3,
+        "indicators": [
+          {
+            "id": "wti_crude",
+            "label": "WTI crude oil",
+            "available": true,
+            "score": 0.0,
+            "latest_value": 83.9,
+            "five_session_change": -2.9833,
+            "change_kind": "percent",
+            "direction": "down",
+            "anomaly_z": -0.53,
+            "observed_at": "2026-08-25",
+            "unit": "USD/barrel",
+            "cached": false,
+            "source_url": "https://fred.stlouisfed.org/series/DCOILWTICO"
+          },
+          {
+            "id": "vix",
+            "label": "CBOE VIX",
+            "available": true,
+            "score": 0.0,
+            "latest_value": 15.21,
+            "five_session_change": 2.1491,
+            "change_kind": "percent",
+            "direction": "up",
+            "anomaly_z": 0.23,
+            "observed_at": "2026-08-26",
+            "unit": "index",
+            "cached": false,
+            "source_url": "https://fred.stlouisfed.org/series/VIXCLS"
+          },
+          {
+            "id": "high_yield_spread",
+            "label": "US high-yield spread",
+            "available": true,
+            "score": 0.0,
+            "latest_value": 2.67,
+            "five_session_change": -0.06,
+            "change_kind": "absolute",
+            "direction": "down",
+            "anomaly_z": -0.67,
+            "observed_at": "2026-08-26",
+            "unit": "percentage points",
+            "cached": false,
+            "source_url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2"
+          }
+        ]
+      },
+      {
+        "id": "synchronized_acceleration",
+        "label": "Synchronized threat acceleration",
+        "score": 100.0,
+        "available": true,
+        "entities_compared": 7,
+        "rising_entities": 7,
+        "rising_share": 1.0,
+        "mean_positive_change": 1.986,
+        "largest_changes": [
+          {
+            "entity": "Greece",
+            "change": 6.29
+          },
+          {
+            "entity": "Armenia",
+            "change": 2.16
+          },
+          {
+            "entity": "Iran",
+            "change": 1.46
+          },
+          {
+            "entity": "Bulgaria",
+            "change": 1.23
+          },
+          {
+            "entity": "Syria",
+            "change": 1.03
+          }
+        ]
+      }
+    ],
+    "alerts": [
+      {
+        "id": "synchronized_acceleration",
+        "level": "SEVERE",
+        "title": "Synchronized threat acceleration",
+        "score": 100.0,
+        "why": "Threat readings are rising together across multiple monitored entities."
+      },
+      {
+        "id": "narrative_pressure",
+        "level": "WATCH",
+        "title": "Narrative precursor pressure",
+        "score": 35.0,
+        "why": "Threat-language concentration and cross-source confirmation exceed routine conditions."
+      }
+    ],
+    "history": [
+      {
+        "timestamp": "2026-08-27T18:31:34.132063+00:00",
+        "score": 39.0,
+        "level": "WATCH",
+        "components": {
+          "narrative_pressure": 35.0,
+          "cross_market_dislocation": 0.0,
+          "synchronized_acceleration": 100.0
+        }
+      }
+    ],
+    "data_health": {
+      "events_considered": 105,
+      "independent_sources": 19,
+      "market_series_available": 3,
+      "available_components": 3
+    },
+    "method": {
+      "name": "Robust multi-domain precursor ensemble",
+      "aggregation": "availability-renormalized weighted mean",
+      "weights": {
+        "narrative_pressure": 0.4,
+        "cross_market_dislocation": 0.35,
+        "synchronized_acceleration": 0.25
+      },
+      "market_anomaly": "five-session change vs median/MAD baseline; 1.4826*MAD scale",
+      "narrative_taxonomy": {
+        "force_posture": [
+          "mobilization",
+          "mobilisation",
+          "reserve call-up",
+          "troop buildup",
+          "troop build-up",
+          "military deployment",
+          "airspace closed",
+          "airspace closure",
+          "no-fly zone",
+          "combat readiness"
+        ],
+        "protective_action": [
+          "embassy closure",
+          "embassy evacuation",
+          "leave immediately",
+          "shelter in place",
+          "civilian evacuation",
+          "travel warning",
+          "departure of non-emergency",
+          "ordered departure"
+        ],
+        "coercive_pressure": [
+          "ultimatum",
+          "blockade",
+          "emergency meeting",
+          "article 5",
+          "collective defence",
+          "collective defense",
+          "strategic forces",
+          "border closure",
+          "port closure"
+        ],
+        "systems_disruption": [
+          "internet shutdown",
+          "communications blackout",
+          "power outage",
+          "gps jamming",
+          "navigation interference",
+          "cyberattack",
+          "cyber attack",
+          "undersea cable",
+          "subsea cable"
+        ]
+      },
+      "warning": "An elevated reading is a triage signal, not proof that a specific event will occur."
+    },
+    "sources": [
+      {
+        "name": "FRED",
+        "url": "https://fred.stlouisfed.org/"
+      },
+      {
+        "name": "Caldara-Iacoviello GPR methodology",
+        "url": "https://www.matteoiacoviello.com/gpr.htm"
+      },
+      {
+        "name": "ViEWS transparent early-warning design",
+        "url": "https://viewsforecasting.org/"
+      }
+    ]
   }
 };

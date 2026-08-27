@@ -325,6 +325,32 @@
         <div id="stream-feed" class="stream-list"></div>
       </section>
       </div>
+
+      <section id="early-warning" class="early-warning-section" aria-labelledby="early-warning-title">
+        <header class="early-warning-header">
+          <div>
+            <div class="panel-title">Multi-domain precursor monitor</div>
+            <h2 id="early-warning-title">Early warning desk</h2>
+          </div>
+          <p>Unusual combinations requiring analyst attention. This is a triage signal, not an event probability.</p>
+        </header>
+        <div class="early-warning-overview">
+          <div class="early-warning-gauge">
+            <span id="early-warning-score">--</span><small>/ 100</small>
+          </div>
+          <dl class="early-warning-meta">
+            <div><dt>Watch level</dt><dd id="early-warning-level">--</dd></div>
+            <div><dt>Data confidence</dt><dd id="early-warning-confidence">--</dd></div>
+            <div><dt>Horizon</dt><dd id="early-warning-horizon">0–7 days</dd></div>
+            <div><dt>Issued</dt><dd id="early-warning-issued">--</dd></div>
+          </dl>
+        </div>
+        <div id="early-warning-components" class="early-warning-components" aria-live="polite"></div>
+        <div class="early-warning-lower">
+          <div><h3>Active signals</h3><div id="early-warning-alerts" class="early-warning-alerts"></div></div>
+          <div><h3>Coverage record</h3><div id="early-warning-health" class="early-warning-health"></div></div>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
@@ -405,6 +431,18 @@
           <h3>7. Publish Gate</h3>
           <p>The dashboard only publishes when feed coverage, LLM attribution, and summary generation all pass
             validation. Failed or thin runs exit cleanly without overwriting the last good public snapshot.</p>
+        </section>
+
+        <section>
+          <h3>8. Early Warning Ensemble</h3>
+          <p>The early-warning desk combines three independently inspectable components: precursor-language pressure
+            across news domains (40%), unusual five-session moves in WTI crude, VIX, and US high-yield spreads (35%),
+            and synchronized index acceleration across monitored countries (25%). Missing components are excluded and
+            the remaining weights are renormalized.</p>
+          <p>Market anomalies use a median/MAD robust baseline. Narrative alerts require observable terms and retain
+            evidence links; cross-source confirmation requires at least two independent domains. Data confidence means
+            coverage quality, not confidence that an event will happen. The 0–7 day label is a triage horizon, and an
+            elevated reading is never presented as a probability or prediction.</p>
         </section>
       </div>
     </div>

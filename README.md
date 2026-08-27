@@ -59,6 +59,14 @@ The Company holds to a single discipline above all others: **evidence before ass
 
 **Lawful collection only.** The Index is built exclusively on open, lawfully accessible sources. There is no scraping behind authentication and no collection of material the Company was not granted access to read.
 
+### Early-warning precursor ensemble
+
+BNTI also publishes a separate 0–7 day triage signal. It combines narrative precursor pressure (40%), unusual five-session moves in WTI crude, VIX, and US high-yield spreads (35%), and synchronized country-index acceleration (25%). Missing components are removed and the available weights are renormalized.
+
+Market anomalies use a median/MAD robust z-score. WTI crude is evaluated in both directions; VIX and high-yield spread use positive anomalies. Narrative detections retain matching terms and evidence links, while cross-source confirmation requires two independent domains. Cached market data expires after 72 hours. The published `early_warning` record includes component scores, alerts, health metrics, rolling history, weights, taxonomy, and source links.
+
+This output is not an event probability. Its confidence label measures data coverage only; the 0–7 day field is a triage horizon, not a promise that a specified event will occur.
+
 ---
 
 ## Coverage

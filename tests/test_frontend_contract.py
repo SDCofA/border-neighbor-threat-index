@@ -28,6 +28,10 @@ PRESERVED_IDS = {
     "trendChart",
     "utc-clock",
     "weights-table",
+    "early-warning-score",
+    "early-warning-components",
+    "early-warning-alerts",
+    "early-warning-health",
 }
 
 

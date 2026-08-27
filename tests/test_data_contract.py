@@ -13,7 +13,7 @@ COUNTRIES = {"Armenia", "Georgia", "Greece", "Iran", "Iraq", "Syria", "Bulgaria"
 
 
 def test_dataset_shape_scores_and_map_country_paths_are_preserved():
-    assert set(DATA) == {"meta", "countries", "history", "forecast", "methodology", "briefing"}
+    assert set(DATA) == {"meta", "countries", "history", "forecast", "early_warning", "methodology", "briefing"}
     assert set(DATA["countries"]) == COUNTRIES
     assert DATA["methodology"]["formula"] == (
         "PerCountry = 1 + 9*(1 - exp(-avg(weight)/5 * 1.2)); "
@@ -28,6 +28,12 @@ def test_dataset_shape_scores_and_map_country_paths_are_preserved():
     assert COUNTRIES <= map_countries
     assert map_countries - COUNTRIES <= {"Turkey"}
     assert all(1.0 <= float(country["index"]) <= 10.0 for country in DATA["countries"].values())
+    warning = DATA["early_warning"]
+    assert warning["classification"] == "precursor-anomaly-watch-not-event-probability"
+    assert warning["horizon"] == "0-7 days"
+    assert {row["id"] for row in warning["components"]} == {
+        "narrative_pressure", "cross_market_dislocation", "synchronized_acceleration"
+    }
 
 
 def test_json_and_javascript_snapshots_are_byte_semantically_equivalent():

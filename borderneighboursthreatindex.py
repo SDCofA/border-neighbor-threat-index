@@ -24,6 +24,8 @@ logging.getLogger("urllib3").setLevel(logging.ERROR)
 import warnings
 warnings.simplefilter("ignore", InsecureRequestWarning)
 
+from early_warning import build_early_warning
+
 # Set socket timeout to prevent hanging on bad feeds
 socket.setdefaulttimeout(10)
 
@@ -296,7 +298,7 @@ class BNTIAnalyzer:
             cached_time = date_parser.parse(fetched_at).replace(tzinfo=None)
         except Exception:
             return None
-        return (datetime.utcnow() - cached_time).total_seconds()
+        return (datetime.now(timezone.utc).replace(tzinfo=None) - cached_time).total_seconds()
 
     def _get_cached_entries(self, url, max_age_seconds):
         if not self.feed_cache_file:
@@ -336,7 +338,7 @@ class BNTIAnalyzer:
         if not serialized:
             return
         payload = {
-            "fetched_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"),
+            "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S"),
             "entries": serialized
         }
         with self.cache_lock:
@@ -1152,6 +1154,22 @@ Events:
         history_records = self._trim_history(history_records if history_records is not None else self.load_history())
         next_update = datetime.now().replace(minute=0, second=0, microsecond=0) + timedelta(hours=2)
 
+        previous_warning = {}
+        live_path = os.path.join(self.output_path, "bnti_data.json")
+        if os.path.exists(live_path):
+            try:
+                with open(live_path, encoding="utf-8") as handle:
+                    previous_warning = json.load(handle).get("early_warning", {})
+            except (OSError, ValueError, TypeError):
+                logger.warning("Existing early-warning history could not be loaded")
+
+        early_warning = build_early_warning(
+            country_results,
+            product="bnti",
+            history=history_records,
+            previous=previous_warning,
+        )
+
         dashboard_data = {
             "meta": {
                 "generated_at": datetime.now().isoformat(),
@@ -1164,6 +1182,7 @@ Events:
             "countries": country_results,
             "history": self._build_history_payload(history_records),
             "forecast": self.generate_forecast(history_records),
+            "early_warning": early_warning,
             "methodology": {
                 "name": "LLM Border Threat Taxonomy",
                 "description": "OpenRouter free routing chooses the final country attribution and canonical threat category for each headline.",
@@ -1927,14 +1946,16 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
         self._promote_candidate_snapshot(candidate)
         logger.info(f"Analysis Complete. Composite Index: {candidate['turkey_index']:.2f}")
         return True
-if __name__ == "__main__":
+def main():
     try:
         analyzer = BNTIAnalyzer()
-        # A rejected candidate is a safe data outcome, not an execution error.
-        # Fatal exceptions must still reach CI as failures.
-        analyzer.run()
+        return 0 if analyzer.run() else 2
     except Exception as e:
         logging.error(f"Analyzer encountered a critical error: {e}")
-        import sys
-        sys.exit(1)
+        return 1
+
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(main())
 
