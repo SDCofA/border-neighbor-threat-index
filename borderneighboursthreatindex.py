@@ -1152,7 +1152,8 @@ Events:
 
     def _build_dashboard_data(self, country_results, turkey_index, status, history_records=None, regional_summary=None):
         history_records = self._trim_history(history_records if history_records is not None else self.load_history())
-        next_update = datetime.now().replace(minute=0, second=0, microsecond=0) + timedelta(hours=2)
+        generated_at = datetime.now()
+        next_update = generated_at + timedelta(hours=2)
 
         previous_warning = {}
         live_path = os.path.join(self.output_path, "bnti_data.json")
@@ -1172,11 +1173,12 @@ Events:
 
         dashboard_data = {
             "meta": {
-                "generated_at": datetime.now().isoformat(),
+                "generated_at": generated_at.isoformat(),
                 "main_index": round(turkey_index, 2),
                 "status": status,
                 "active_scan": False,
                 "next_update": next_update.isoformat(),
+                "refresh_target_minutes": 120,
                 "version": "2.0.0",
             },
             "countries": country_results,
@@ -1274,7 +1276,7 @@ Events:
                 api_keys.append(key)
 
         if not api_keys:
-            logger.warning("OpenRouter API keys not set — cannot build publishable candidate")
+            logger.info("OpenRouter keys unavailable; deterministic attribution remains active")
             self.openrouter_disabled_for_run = True
             return None
 

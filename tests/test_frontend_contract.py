@@ -39,8 +39,9 @@ def test_runtime_selectors_and_script_order_remain_available():
     ids = set(re.findall(r'\bid=["\']([^"\']+)', HTML))
     assert PRESERVED_IDS <= ids
     scripts = re.findall(r'<script[^>]+src=["\']([^"\']+)', HTML)
-    assert scripts[-5:] == [
+    assert scripts[-6:] == [
         "bnti_data.js",
+        "js/freshness.js",
         "js/core.js",
         "js/map.js",
         "js/charts.js",

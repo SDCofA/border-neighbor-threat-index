@@ -98,7 +98,7 @@
     border-color: var(--elevated);
 }
 
-/* Live blinking dot */
+/* Snapshot health dot: static so it never implies a live connection. */
 .live-dot {
     display: inline-block;
     width: 6px;
@@ -106,7 +106,16 @@
     border-radius: 50%;
     background: var(--stable);
     margin-right: 4px;
-    animation: blink 1.5s infinite;
+    animation: none;
+}
+
+.status-pill.data-delayed .live-dot,
+.status-pill.data-unknown .live-dot {
+    background: var(--elevated);
+}
+
+.status-pill.data-stale .live-dot {
+    background: var(--critical);
 }
 
 .status-pill.critical .live-dot {

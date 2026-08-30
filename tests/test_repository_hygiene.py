@@ -16,7 +16,7 @@ LICENSE_DECISION = "preserve-mit"
 
 def test_repository_hygiene_documentation_contract():
     assert MATCH, "README must include the managed repository-hygiene block"
-    assert "BNTI — multilingual, LLM-normalized geopolitical threat index for Türkiye's seven border neighbors. Auto-refreshed every 2 hours via GitHub Actions and published to GitHub Pages." in CONTRACT
+    assert "BNTI — multilingual, rules-based geopolitical threat index for Türkiye's seven border neighbors, with optional LLM-assisted attribution. Checked hourly by GitHub Actions and published to GitHub Pages." in CONTRACT
     assert "lifecycle-active" in CONTRACT
     assert "https://sdcofa.github.io/border-neighbor-threat-index/" in CONTRACT
     for heading in HEADINGS:

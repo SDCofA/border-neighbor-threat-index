@@ -9,8 +9,8 @@ on:
       - 'bnti_data.json'
       - 'bnti_history.csv'
   schedule:
-    # Run every 2 hours at minute 0
-    - cron: '0 */2 * * *'
+    # GitHub schedules are best-effort. Hourly checks give the two-hour publication target headroom.
+    - cron: '17 * * * *'
   # Allow manual trigger
   workflow_dispatch:
     inputs:
@@ -68,6 +68,9 @@ jobs:
         OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         OPENROUTER_API_KEY_BACKUP: ${{ secrets.OPENROUTER_API_KEY_BACKUP }}
         OPENROUTER_MODEL: openrouter/free
+
+    - name: Verify Fresh Snapshot
+      run: python scripts/check_snapshot_health.py bnti_data.json --max-age-minutes 20
 
     - name: Commit Updated Data
       shell: bash
@@ -131,3 +134,19 @@ jobs:
         if: steps.deployment.outcome == 'failure'
         id: deployment_retry
         uses: actions/deploy-pages@v5
+
+      - name: Verify public snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            if curl --fail --silent --show-error --location --max-time 20 \
+              "https://sdcofa.github.io/border-neighbor-threat-index/bnti_data.json?run=${GITHUB_RUN_ID}-${attempt}" \
+              --output /tmp/bnti-live.json && \
+              python scripts/check_snapshot_health.py /tmp/bnti-live.json --max-age-minutes 480; then
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Published snapshot did not pass the freshness contract" >&2
+          exit 1

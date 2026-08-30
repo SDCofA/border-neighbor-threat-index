@@ -82,7 +82,7 @@ class CandidateSnapshotGateTests(unittest.TestCase):
                 "Regional pressure remains centered on Iraq.",
             )
 
-    def test_workflow_uses_two_hour_schedule_backup_key_and_deploy_only_path(self):
+    def test_workflow_uses_hourly_headroom_backup_key_and_health_gates(self):
         workflow_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
             ".github",
@@ -92,8 +92,10 @@ class CandidateSnapshotGateTests(unittest.TestCase):
         with open(workflow_path, "r", encoding="utf-8") as handle:
             workflow = handle.read()
 
-        self.assertIn("0 */2 * * *", workflow)
+        self.assertIn("17 * * * *", workflow)
         self.assertIn("OPENROUTER_API_KEY_BACKUP", workflow)
+        self.assertIn("check_snapshot_health.py bnti_data.json --max-age-minutes 20", workflow)
+        self.assertIn("check_snapshot_health.py /tmp/bnti-live.json --max-age-minutes 480", workflow)
         self.assertIn("paths-ignore:", workflow)
         self.assertIn("deploy_only:", workflow)
         self.assertIn("inputs.deploy_only", workflow)

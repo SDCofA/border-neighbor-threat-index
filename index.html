@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BNTI | Monarch Castle Technologies</title>
   <meta name="description"
-    content="Border Neighbor Threat Index — real-time geopolitical threat monitoring and analysis platform by Monarch Castle Technologies." />
+    content="Border Neighbor Threat Index — continuously updated open-source geopolitical monitoring by Monarch Castle Technologies." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -50,7 +50,7 @@
           <div id="status-pill" class="status-pill" aria-live="polite">STABLE</div>
           <dl class="status-meta">
             <div><dt>Updated</dt><dd id="last-update">--</dd></div>
-            <div><dt>Next</dt><dd id="next-update">--</dd></div>
+            <div><dt>Freshness</dt><dd id="next-update">--</dd></div>
           </dl>
           <div id="utc-clock" class="utc-clock">--:--:-- UTC</div>
         </div>
@@ -60,7 +60,7 @@
     <main id="main-content" class="content-shell">
       <div class="edition-strip">
         <span>BNTI &middot; Current regional edition</span>
-        <span>Automated monitoring &middot; Refresh target every 2 hours</span>
+        <span>Automated monitoring &middot; Hourly checks &middot; Actual freshness shown</span>
       </div>
       <div class="grid">
       <section class="panel metric-panel">
@@ -429,8 +429,9 @@
 
         <section>
           <h3>7. Publish Gate</h3>
-          <p>The dashboard only publishes when feed coverage, LLM attribution, and summary generation all pass
-            validation. Failed or thin runs exit cleanly without overwriting the last good public snapshot.</p>
+          <p>The dashboard publishes only validated feed coverage. Deterministic country and category rules keep the
+            pipeline keyless-capable; the optional language model improves ambiguous attribution. Failed or thin runs
+            leave the last valid public snapshot in place, while the header reports its actual age.</p>
         </section>
 
         <section>
@@ -449,6 +450,7 @@
   </div>
 
   <script src="bnti_data.js"></script>
+  <script src="js/freshness.js"></script>
   <script src="js/core.js"></script>
   <script src="js/map.js"></script>
   <script src="js/charts.js"></script>

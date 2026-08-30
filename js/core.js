@@ -75,9 +75,15 @@ const BNTI = {
     }
 
     const lastUpdate = this.data?.meta?.generated_at ? new Date(this.data.meta.generated_at) : null;
-    const nextUpdate = this.data?.meta?.next_update ? new Date(this.data.meta.next_update) : null;
     document.getElementById('last-update').textContent = lastUpdate && !Number.isNaN(lastUpdate.getTime()) ? this.formatDateTime(lastUpdate) : '--';
-    document.getElementById('next-update').textContent = nextUpdate && !Number.isNaN(nextUpdate.getTime()) ? this.formatDateTime(nextUpdate) : '--';
+    const freshness = BNTIFreshness.evaluate(
+      this.data?.meta?.generated_at,
+      new Date(),
+      Number(this.data?.meta?.refresh_target_minutes) || 120
+    );
+    document.getElementById('next-update').textContent = freshness.label;
+    statusPill.classList.remove('data-current', 'data-delayed', 'data-stale', 'data-unknown');
+    statusPill.classList.add(`data-${freshness.level}`);
   },
 
   // ── Metrics Update ──
@@ -266,6 +272,8 @@ const BNTI = {
         console.log('Poll:', e.message);
       }
     }, 60000);
+
+    setInterval(() => this.updateHeader(), 60000);
   },
 
   // ── UTC Clock ──

@@ -2,7 +2,7 @@
 
 This system is set up to run automatically on **GitHub Actions**.
 It will:
-1. Run the Python Intelligence Analyzer every 2 hours.
+1. Request the Python Intelligence Analyzer hourly, providing headroom for a two-hour publication target.
 2. Update the `bnti_data.js` file with latest threat assessments.
 3. Publish the updated Dashboard to GitHub Pages.
 
@@ -58,7 +58,7 @@ Once the workflow completes (~15 minutes first time):
 https://YOUR_USERNAME.github.io/border-neighbor-threat-index/
 ```
 
-The system updates automatically every 2 hours. You can access it from any device - phone, tablet, or computer.
+The system requests an hourly update through GitHub Actions. GitHub schedules are best-effort; the public header shows actual freshness and clearly marks delays.
 
 ---
 
