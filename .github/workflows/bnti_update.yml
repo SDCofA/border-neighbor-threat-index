@@ -9,8 +9,8 @@ on:
       - 'bnti_data.json'
       - 'bnti_history.csv'
   schedule:
-    # GitHub schedules are best-effort. Hourly checks give the two-hour publication target headroom.
-    - cron: '17 * * * *'
+    # One daily run stays within the free classifier's account-wide request budget.
+    - cron: '17 2 * * *'
   # Allow manual trigger
   workflow_dispatch:
     inputs:
@@ -78,6 +78,7 @@ jobs:
         OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         OPENROUTER_API_KEY_BACKUP: ${{ secrets.OPENROUTER_API_KEY_BACKUP }}
         OPENROUTER_MODEL: openrouter/free
+        OPENROUTER_BATCH_SIZE: '25'
 
     - name: Verify Fresh Snapshot
       run: python scripts/check_snapshot_health.py bnti_data.json --max-age-minutes 20
@@ -153,7 +154,7 @@ jobs:
             if curl --fail --silent --show-error --location --max-time 20 \
               "https://sdcofa.github.io/border-neighbor-threat-index/bnti_data.json?run=${GITHUB_RUN_ID}-${attempt}" \
               --output /tmp/bnti-live.json && \
-              python scripts/check_snapshot_health.py /tmp/bnti-live.json --max-age-minutes 480; then
+              python scripts/check_snapshot_health.py /tmp/bnti-live.json --max-age-minutes 1500; then
               exit 0
             fi
             sleep 15

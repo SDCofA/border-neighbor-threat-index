@@ -6,7 +6,7 @@
 
   ![Assessment](https://img.shields.io/badge/Assessment-Open%20Source-0b1f3a)
   ![Classification](https://img.shields.io/badge/Classification-Unclassified-6e1f2b)
-  ![Cadence](https://img.shields.io/badge/Cadence-hourly%20checks-b0894f)
+  ![Cadence](https://img.shields.io/badge/Cadence-daily%20check-b0894f)
   ![Coverage](https://img.shields.io/badge/Coverage-7%20border%20states-0b1f3a)
   ![Method](https://img.shields.io/badge/Method-Deterministic%20scoring-b0894f)
   ![License](https://img.shields.io/badge/License-MIT-6e1f2b)
@@ -85,7 +85,7 @@ Seven border states are under continuous assessment, each monitored against a de
 | Syria | Arabic |
 | Bulgaria | Bulgarian |
 
-An hourly GitHub Actions check targets publication within two hours. GitHub-hosted schedules are best-effort, so the dashboard reports the actual snapshot age and flags delayed or stale data instead of promising an exact next run.
+A daily GitHub Actions check fits within the free classifier's request budget. GitHub-hosted schedules are best-effort, so the dashboard reports the actual snapshot age and flags delayed or stale data.
 
 ---
 
@@ -117,14 +117,14 @@ python borderneighboursthreatindex.py
 ```
 The run regenerates `bnti_data.json`, `bnti_data.js`, and `bnti_history.csv` in place. Open `index.html` to review the dashboard against the freshly generated data.
 
-**Automated operation.** The `BNTI Intelligence Update` workflow (`.github/workflows/bnti_update.yml`) requests an hourly run, validates the candidate, commits changed data, deploys GitHub Pages, then checks the public snapshot. OpenRouter keys are optional: deterministic attribution keeps the pipeline operational without registration, while configured primary and backup keys improve ambiguous classifications. It may also be invoked manually, including a deploy-only mode. The full zero-cost setup is documented in **[`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md)**.
+**Automated operation.** The `BNTI Intelligence Update` workflow (`.github/workflows/bnti_update.yml`) requests one daily run with larger classification batches, validates the candidate, commits changed data, deploys GitHub Pages, then checks the public snapshot. A valid model classification is required for a numerical index; deterministic attribution alone cannot satisfy the publication gate. It may also be invoked manually, including a deploy-only mode. The full zero-cost setup is documented in **[`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md)**.
 
 ### Instrument & repository
 
 - **Intelligence engine (Python 3.11)** — `feedparser`, `pandas`, `numpy`, `python-dateutil`, `requests`, `googletrans`.
 - **Classification layer** — OpenRouter (`openrouter/free`) for country re-attribution and canonical threat labeling, with primary/backup key failover.
 - **Presentation** — HTML, CSS, and vanilla JavaScript (`js/core.js`, `js/map.js`, `js/stream.js`, `js/charts.js`) with Chart.js.
-- **Automation** — GitHub Actions hourly target plus manual `workflow_dispatch`; actual snapshot age is exposed in the interface.
+- **Automation** — GitHub Actions daily target plus manual `workflow_dispatch`; actual snapshot age is exposed in the interface.
 - **Hosting** — GitHub Pages (static deploy).
 - **Methodology** — LaTeX source (`methodology.tex`) compiled to `methodology.pdf`.
 
@@ -177,7 +177,7 @@ A standing index of the **Strategic Data Company of Ankara** — a constituent h
 
 ![Strategic Data Company of Ankara approved lockup](docs/brand/organization-lockup.png)
 
-BNTI — multilingual, rules-based geopolitical threat index for Türkiye's seven border neighbors, with optional LLM-assisted attribution. Checked hourly by GitHub Actions and published to GitHub Pages.
+BNTI — multilingual, rules-based geopolitical threat index for Türkiye's seven border neighbors, with model classification required for numerical publication. Checked daily by GitHub Actions and published to GitHub Pages.
 
 ![Lifecycle: Active](docs/lifecycle-active.svg)
 
@@ -203,7 +203,7 @@ These repository-specific sources define the methodology or provenance boundary.
 
 ## Update frequency
 
-The workflow requests hourly checks and targets publication within two hours. GitHub schedule timing is not guaranteed; freshness and publish gates may defer a run, and the interface shows the actual age.
+The workflow requests a daily check. GitHub schedule timing is not guaranteed; freshness and publish gates may defer a run, and the interface shows the actual age.
 
 ## Quick start
 
