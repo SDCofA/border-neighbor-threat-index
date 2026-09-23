@@ -74,7 +74,7 @@ class LLMPublishGateTests(unittest.TestCase):
 
         self.assertFalse(candidate["publishable"])
 
-    def test_build_candidate_snapshot_falls_back_when_openrouter_rate_limited(self):
+    def test_build_candidate_snapshot_withholds_when_openrouter_rate_limited(self):
         analyzer = self.make_analyzer()
         analyzer.MIN_PUBLISHABLE_TOTAL_SIGNALS = 1
         analyzer.MIN_PUBLISHABLE_ACTIVE_COUNTRIES = 1
@@ -109,15 +109,8 @@ class LLMPublishGateTests(unittest.TestCase):
             ]
         })
 
-        self.assertTrue(candidate["publishable"])
-        event = candidate["country_results"]["Iraq"]["events"][0]
-        self.assertEqual(event["category"], "border_security")
-        self.assertEqual(event["llm_primary_country"], "Iraq")
-        self.assertEqual(event["llm_final_country"], "Iraq")
-        self.assertEqual(event["confidence"], 0.35)
-        self.assertFalse(event["ai_category"])
-        self.assertEqual(event["ai_model"], "deterministic-fallback")
-        self.assertEqual(event["fallback_reason"], "llm_attribution_failed")
+        self.assertFalse(candidate["publishable"])
+        self.assertEqual(candidate["reason"], "classification_unavailable")
 
     def test_build_candidate_snapshot_skips_llm_after_rate_limit_circuit_breaker(self):
         analyzer = self.make_analyzer()
@@ -158,7 +151,8 @@ class LLMPublishGateTests(unittest.TestCase):
             ]
         })
 
-        self.assertTrue(candidate["publishable"])
+        self.assertFalse(candidate["publishable"])
+        self.assertEqual(candidate["reason"], "classification_unavailable")
         self.assertEqual(call_count["value"], 1)
 
     def test_build_country_results_scores_from_llm_category_only(self):

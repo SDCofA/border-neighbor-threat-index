@@ -19,6 +19,13 @@ def validate_snapshot(payload, max_age_minutes, now=None):
     age_minutes = (now - generated).total_seconds() / 60
     if age_minutes < -5:
         raise ValueError("snapshot timestamp is in the future")
+    meta = payload.get("meta", {})
+    if meta.get("withdrawn"):
+        if meta.get("status") != "WITHHELD" or not meta.get("withdrawal_reason"):
+            raise ValueError("withdrawal notice is incomplete")
+        if payload.get("countries") != {} or "main_index" in meta:
+            raise ValueError("withdrawn snapshot must not expose an index")
+        return age_minutes
     if age_minutes > max_age_minutes:
         raise ValueError(f"snapshot is {age_minutes:.0f} minutes old")
     countries = payload.get("countries")
@@ -34,7 +41,10 @@ def main():
     args = parser.parse_args()
     payload = json.loads(args.snapshot.read_text(encoding="utf-8"))
     age = validate_snapshot(payload, args.max_age_minutes)
-    print(f"Snapshot healthy: {age:.1f} minutes old")
+    if payload.get("meta", {}).get("withdrawn"):
+        print(f"Withdrawal notice published; no active index ({age:.1f} minutes since withdrawal)")
+    else:
+        print(f"Snapshot healthy: {age:.1f} minutes old")
 
 
 if __name__ == "__main__":
