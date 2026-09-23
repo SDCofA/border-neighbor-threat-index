@@ -1706,11 +1706,12 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
             attribution_map[idx] = {
                 "primary_country": source_country,
                 "final_country": source_country,
-                "category": "border_security" if source_country != "IRRELEVANT" else "neutral",
+                # A failed classifier is missing evidence, not evidence of a border threat.
+                "category": "neutral",
                 "subject": event.get("translated_title") or event.get("title"),
-                "confidence": 0.35,
+                "confidence": 0.0,
                 "ai_category": False,
-                "ai_model": "deterministic-fallback",
+                "ai_model": "unclassified-fallback",
                 "fallback_reason": reason,
             }
         return attribution_map
@@ -1900,6 +1901,9 @@ Respond ONLY with a valid JSON array, no explanation, no markdown:
 
         if len(attribution_map) != len(all_events):
             return {"publishable": False, "reason": "partial_attribution_map"}
+
+        if any(result.get("fallback_reason") for result in attribution_map.values()):
+            return {"publishable": False, "reason": "classification_unavailable"}
 
         country_results = self._build_country_results(all_events, attribution_map)
         coverage_ok, coverage = self._passes_coverage_gate(country_results, history_records)

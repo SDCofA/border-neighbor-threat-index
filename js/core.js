@@ -63,6 +63,7 @@ const BNTI = {
 
   // ── Header Update ──
   updateHeader() {
+    if (this.data?.meta?.withdrawn) return;
     const status = (this.data?.meta?.status || 'STABLE').toUpperCase();
     const statusClass = status.includes('CRITICAL') ? 'CRITICAL' : status.includes('ELEVATED') ? 'ELEVATED' : 'STABLE';
     const statusPill = document.getElementById('status-pill');
@@ -244,6 +245,30 @@ const BNTI = {
   // ── Render All ──
   renderAll() {
     if (!this.data) return;
+    if (this.data.meta?.withdrawn) {
+      const main = document.getElementById('main-content');
+      const pill = document.getElementById('status-pill');
+      if (pill) {
+        pill.textContent = 'WITHHELD';
+        pill.classList.remove('critical', 'elevated', 'stable', 'data-current');
+        pill.classList.add('data-stale');
+      }
+      if (main) {
+        main.replaceChildren();
+        const notice = document.createElement('section');
+        notice.setAttribute('role', 'alert');
+        notice.style.cssText = 'max-width:760px;margin:3rem auto;padding:2rem;border:1px solid #b0894f;background:#0b1f3a;color:#fff;line-height:1.7';
+        const title = document.createElement('h2');
+        title.textContent = 'Assessment withheld — data quality';
+        const explanation = document.createElement('p');
+        explanation.textContent = this.data.meta.withdrawal_reason || 'The latest classification did not meet publication requirements. No current threat index is available.';
+        const methodology = document.createElement('p');
+        methodology.textContent = 'A new index will appear only after source coverage and headline classification pass the publication gates.';
+        notice.append(title, explanation, methodology);
+        main.appendChild(notice);
+      }
+      return;
+    }
     const historyPoints = this.parsePoints(this.data.history);
     const forecastPoints = this.parsePoints(this.data.forecast);
     this.updateHeader();
@@ -264,6 +289,10 @@ const BNTI = {
         const res = await fetch(`bnti_data.json?t=${Date.now()}`);
         if (!res.ok) return;
         const newData = await res.json();
+        if (newData?.meta?.withdrawn !== this.data?.meta?.withdrawn) {
+          window.location.reload();
+          return;
+        }
         if (newData?.meta?.generated_at && newData.meta.generated_at !== this.data?.meta?.generated_at) {
           this.data = newData;
           this.renderAll();

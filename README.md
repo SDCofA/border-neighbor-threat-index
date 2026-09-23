@@ -43,6 +43,8 @@ The Index measures the prevailing threat posture of seven states sharing a land 
 
 The assessment is deliberately conservative in publication. A collection cycle that cannot meet minimum thresholds for signal volume, active countries, and coverage ratio is rejected outright; the prior validated snapshot remains live. The Index prefers a stale-but-trustworthy figure to a published-but-thin one.
 
+**Classification publication gate (23 September 2026).** A classifier failure now marks an article unclassified with zero confidence and rejects the entire candidate snapshot. It must never be converted into a `border_security` event. The previously published assessment was withdrawn because all 105 articles had taken that fallback path; the public dashboard displays a data-quality hold until a fully classified run passes the existing coverage gates. A failed run does not restore the withdrawn score.
+
 ---
 
 ## Methodology & Provenance

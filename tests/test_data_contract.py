@@ -13,6 +13,11 @@ COUNTRIES = {"Armenia", "Georgia", "Greece", "Iran", "Iraq", "Syria", "Bulgaria"
 
 
 def test_dataset_shape_scores_and_map_country_paths_are_preserved():
+    if DATA["meta"].get("withdrawn"):
+        assert DATA["meta"]["status"] == "WITHHELD"
+        assert DATA["countries"] == {}
+        assert "main_index" not in DATA["meta"]
+        return
     assert set(DATA) == {"meta", "countries", "history", "forecast", "early_warning", "methodology", "briefing"}
     assert set(DATA["countries"]) == COUNTRIES
     assert DATA["methodology"]["formula"] == (
@@ -49,7 +54,7 @@ def test_multilingual_source_and_translation_behavior_remains_supported():
     assert "translate.google.com" in STREAM_JS
     assert "encodeURIComponent(e.link)" in STREAM_JS
     assert "rel=\"noopener\"" in STREAM_JS
-    assert any(
+    assert DATA["meta"].get("withdrawn") or any(
         event.get("detected_lang") != "en"
         for country in DATA["countries"].values()
         for event in country.get("events", [])
