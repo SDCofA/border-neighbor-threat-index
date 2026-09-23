@@ -63,7 +63,17 @@ jobs:
       run: python -m pytest -q
 
     - name: Run BNTI Analyzer
-      run: python borderneighboursthreatindex.py
+      shell: bash
+      run: |
+        if python borderneighboursthreatindex.py; then
+          echo "A validated snapshot was published."
+        else
+          result=$?
+          if [ "$result" -ne 2 ]; then
+            exit "$result"
+          fi
+          echo "Classification was unavailable; the existing WITHHELD notice remains published."
+        fi
       env:
         OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         OPENROUTER_API_KEY_BACKUP: ${{ secrets.OPENROUTER_API_KEY_BACKUP }}
