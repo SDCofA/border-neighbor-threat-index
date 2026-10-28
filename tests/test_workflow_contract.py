@@ -18,3 +18,9 @@ def test_pages_deploy_retries_without_reuploading_artifact():
     assert WORKFLOW.count("actions/deploy-pages@v5") == 2
     assert "if: steps.deployment.outcome == 'failure'" in WORKFLOW
     assert "steps.deployment_retry.outputs.page_url" in WORKFLOW
+
+
+def test_withdrawn_assessment_is_reported_after_deployment():
+    assert "verify-active-assessment:" in WORKFLOW
+    assert "needs: [update-intelligence, deploy-pages]" in WORKFLOW
+    assert 'meta.get("status") == "WITHHELD"' in WORKFLOW

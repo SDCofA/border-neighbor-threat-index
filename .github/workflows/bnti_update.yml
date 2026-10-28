@@ -161,3 +161,22 @@ jobs:
           done
           echo "Published snapshot did not pass the freshness contract" >&2
           exit 1
+
+  verify-active-assessment:
+    needs: [update-intelligence, deploy-pages]
+    if: ${{ always() && needs.update-intelligence.result == 'success' && needs.deploy-pages.result == 'success' && (github.event_name != 'workflow_dispatch' || inputs.deploy_only != true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - name: Report withdrawn assessment
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          meta = json.loads(Path("bnti_data.json").read_text(encoding="utf-8")).get("meta", {})
+          if meta.get("withdrawn") is True or meta.get("status") == "WITHHELD":
+              raise SystemExit("Assessment remains withdrawn: classification or coverage has not passed publication gates.")
+          print("An active assessment is published.")
+          PY
